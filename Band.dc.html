@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Zilla+Slab:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{margin:0; background:#0D0D0D; color:#F4E9D8; font-family:'Manrope',sans-serif; overflow-x:hidden;}
+    ::selection{background:#C47A2C; color:#0D0D0D;}
+    [data-member]:hover [data-member-img]{transform:scale(1.05);}
+    [data-member]:hover [data-fact]{opacity:1; transform:translateY(0);}
+  </style>
+</helmet>
+
+<div style="background:#0D0D0D;">
+  <dc-import name="Nav" current="band" hint-size="100%,80px"></dc-import>
+
+  <!-- BAND HERO -->
+  <section style="position:relative; min-height:78vh; display:flex; align-items:flex-end; overflow:hidden;">
+    <div style="position:absolute; inset:0; background-image:url('assets/band-barn-group.jpg'); background-size:cover; background-position:center 30%;"></div>
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(13,13,13,0.65) 0%, rgba(13,13,13,0.4) 40%, rgba(13,13,13,0.96) 100%);"></div>
+    <div style="position:relative; max-width:1200px; width:100%; margin:0 auto; padding:0 5vw 70px;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
+        <span style="color:#C47A2C;">&#9733;</span>
+        <span style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.34em; text-transform:uppercase; color:#C47A2C;">Four Pickers, One Sound</span>
+      </div>
+      <h1 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(44px,7vw,96px); line-height:0.92; text-transform:uppercase; margin:0; color:#F4E9D8; text-shadow:0 6px 40px rgba(0,0,0,0.6);">The Band</h1>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section style="padding:96px 5vw; background:#0D0D0D;">
+    <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:54px; align-items:center;" data-story-grid>
+      <div style="position:relative; border-radius:6px; overflow:hidden; aspect-ratio:4/5;" data-zoom>
+        <div style="position:absolute; inset:0; background-image:url('assets/bw-duo.jpg'); background-size:cover; background-position:center 20%;"></div>
+        <div style="position:absolute; inset:0; border:1px solid rgba(196,122,44,0.25); border-radius:6px;"></div>
+      </div>
+      <div>
+        <div style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.3em; text-transform:uppercase; color:#C47A2C; margin-bottom:16px;">Our Story</div>
+        <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(28px,3.6vw,46px); line-height:1; text-transform:uppercase; color:#F4E9D8; margin:0 0 22px;">Born In North Texas, Built For The Stage</h2>
+        <p style="color:#A8A8A8; font-size:16px; line-height:1.75; margin:0 0 16px;">Texas, Whiskey &amp; You came together for one reason &mdash; a shared obsession with the soul, grit, and songwriting of Chris Stapleton. What started as a handful of friends trading licks turned into one of North Texas&rsquo; most-requested tribute experiences.</p>
+        <p style="color:#A8A8A8; font-size:16px; line-height:1.75; margin:0 0 16px;">We don&rsquo;t do karaoke. Four seasoned musicians chase the real tone, the real dynamics, and that unmistakable gravel-and-soul vocal &mdash; then let the room take over.</p>
+        <p style="color:#A8A8A8; font-size:16px; line-height:1.75; margin:0;">Our mission is simple: give every crowd, in every kind of room, a night that feels like the real thing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMBERS -->
+  <section style="padding:80px 5vw 96px; background:#161616;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:54px;">
+        <div style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.3em; text-transform:uppercase; color:#C47A2C; margin-bottom:14px;">Meet The Pickers</div>
+        <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(30px,4.4vw,54px); text-transform:uppercase; color:#F4E9D8; margin:0;">The Lineup</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:18px;" data-members-grid>
+        <sc-for list="{{ members }}" as="m" hint-placeholder-count="4">
+          <div style="position:relative; border-radius:6px; overflow:hidden; background:#0D0D0D; border:1px solid rgba(244,233,216,0.08);" data-member>
+            <div style="position:relative; aspect-ratio:3/4; overflow:hidden;">
+              <img src="assets/band-tree2.jpg" alt="{{ m.name }}" style="width:100%; height:100%; object-fit:cover; object-position:{{ m.pos }}; transition:transform 0.5s ease;" data-member-img>
+              <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(13,13,13,0) 40%, rgba(13,13,13,0.92));"></div>
+              <div data-fact style="position:absolute; inset:0; background:rgba(13,13,13,0.82); display:flex; flex-direction:column; justify-content:center; padding:26px; opacity:0; transform:translateY(10px); transition:opacity 0.3s ease, transform 0.3s ease;">
+                <div style="font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:#D38B36; margin-bottom:10px;">Fun Fact</div>
+                <p style="color:#F4E9D8; font-size:14.5px; line-height:1.6; margin:0;">{{ m.fact }}</p>
+              </div>
+            </div>
+            <div style="padding:20px 22px 24px;">
+              <div style="font-family:'Oswald',sans-serif; font-weight:700; font-size:21px; text-transform:uppercase; color:#F4E9D8; line-height:1;">{{ m.name }}</div>
+              <div style="display:inline-flex; align-items:center; gap:7px; margin-top:10px;">
+                <span style="color:#C47A2C; font-size:12px;">&#9733;</span>
+                <span style="font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#D38B36;">{{ m.role }}</span>
+              </div>
+              <p style="color:#A8A8A8; font-size:13.5px; line-height:1.6; margin:12px 0 0;">{{ m.bio }}</p>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="text-align:center; color:#6f6f6f; font-size:13px; margin:26px auto 0; max-width:60ch;">Hover a card for a fun fact. Photos are crops from a group shot &mdash; drop in individual headshots anytime.</p>
+    </div>
+  </section>
+
+  <!-- EQUIPMENT -->
+  <section style="padding:96px 5vw; background:#0D0D0D;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:54px;">
+        <div style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.3em; text-transform:uppercase; color:#C47A2C; margin-bottom:14px;">Tools Of The Trade</div>
+        <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(30px,4.4vw,54px); text-transform:uppercase; color:#F4E9D8; margin:0;">The Gear</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;" data-gear-grid>
+        <div style="background:#161616; border:1px solid rgba(244,233,216,0.08); border-radius:5px; padding:38px 32px; transition:border-color 0.25s ease;" style-hover="border-color:rgba(196,122,44,0.4);">
+          <div style="width:54px; height:54px; border-radius:50%; border:1.5px solid rgba(196,122,44,0.5); display:flex; align-items:center; justify-content:center; margin-bottom:22px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="16" r="4"></circle><path d="M11 13l8-8M16 5h3v3"></path></svg>
+          </div>
+          <h3 style="font-family:'Oswald',sans-serif; font-weight:600; font-size:22px; text-transform:uppercase; color:#F4E9D8; margin:0 0 12px;">Guitars</h3>
+          <p style="color:#A8A8A8; font-size:15px; line-height:1.7; margin:0;">Vintage-voiced electrics and warm dreadnought acoustics tuned for that Stapleton bark and shimmer.</p>
+        </div>
+        <div style="background:#161616; border:1px solid rgba(244,233,216,0.08); border-radius:5px; padding:38px 32px; transition:border-color 0.25s ease;" style-hover="border-color:rgba(196,122,44,0.4);">
+          <div style="width:54px; height:54px; border-radius:50%; border:1.5px solid rgba(196,122,44,0.5); display:flex; align-items:center; justify-content:center; margin-bottom:22px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"></rect><circle cx="12" cy="13" r="4"></circle><circle cx="8" cy="6.5" r="0.6" fill="#D38B36"></circle><circle cx="16" cy="6.5" r="0.6" fill="#D38B36"></circle></svg>
+          </div>
+          <h3 style="font-family:'Oswald',sans-serif; font-weight:600; font-size:22px; text-transform:uppercase; color:#F4E9D8; margin:0 0 12px;">Amplifiers</h3>
+          <p style="color:#A8A8A8; font-size:15px; line-height:1.7; margin:0;">Tube amps that breathe &mdash; cleans that sparkle and overdrive that growls without ever getting harsh.</p>
+        </div>
+        <div style="background:#161616; border:1px solid rgba(244,233,216,0.08); border-radius:5px; padding:38px 32px; transition:border-color 0.25s ease;" style-hover="border-color:rgba(196,122,44,0.4);">
+          <div style="width:54px; height:54px; border-radius:50%; border:1.5px solid rgba(196,122,44,0.5); display:flex; align-items:center; justify-content:center; margin-bottom:22px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" stroke-linecap="round"><path d="M4 12h2l2-6 4 14 3-10 2 4 3-2"></path></svg>
+          </div>
+          <h3 style="font-family:'Oswald',sans-serif; font-weight:600; font-size:22px; text-transform:uppercase; color:#F4E9D8; margin:0 0 12px;">Pro Sound</h3>
+          <p style="color:#A8A8A8; font-size:15px; line-height:1.7; margin:0;">Full PA, in-ears, and a seasoned engineer&rsquo;s ear &mdash; we bring the rig or plug into yours, festival to ballroom.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="position:relative; padding:110px 5vw; overflow:hidden;">
+    <div style="position:absolute; inset:0; background-image:url('assets/bw-barn-band.jpg'); background-size:cover; background-position:center 38%;"></div>
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(13,13,13,0.88), rgba(13,13,13,0.94)); "></div>
+    <div style="position:relative; max-width:760px; margin:0 auto; text-align:center;">
+      <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(32px,5vw,62px); line-height:0.96; text-transform:uppercase; color:#F4E9D8; margin:0 0 22px;">Let&rsquo;s Make Some Noise</h2>
+      <p style="color:#A8A8A8; font-size:17px; line-height:1.6; max-width:50ch; margin:0 auto 34px;">Book the full band for your next festival, venue night, or private party.</p>
+      <a href="Book.dc.html" style="font-family:'Oswald',sans-serif; font-weight:600; font-size:16px; letter-spacing:0.1em; text-transform:uppercase; color:#0D0D0D; background:linear-gradient(135deg,#D38B36,#A45A20); padding:18px 40px; border-radius:2px; text-decoration:none; box-shadow:0 10px 34px rgba(196,122,44,0.45);">Book The Band</a>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,520px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  members = [
+    { name:'Chris Rowland', role:'Lead Vocals / Guitar', pos:'10% 18%',
+      bio:'The voice out front &mdash; chasing that gravel-and-soul tone that makes you check twice.',
+      fact:'Can go from a whisper to a full-throated holler in the same line &mdash; and the room goes quiet for both.' },
+    { name:'Christian Sly', role:'Lead Guitar / Vocals', pos:'37% 18%',
+      bio:'Tone chaser and lead-line architect, weaving the licks that define the sound.',
+      fact:'Owns more guitar pedals than pairs of boots &mdash; and that is saying something in Texas.' },
+    { name:'Clay Wise', role:'Bass / Vocals', pos:'63% 18%',
+      bio:'The low-end anchor &mdash; locks the pocket and keeps the dance floor honest.',
+      fact:'Counts the band in by feel; swears he has never needed a click track in his life.' },
+    { name:'Tull Rea', role:'Drums / Vocals', pos:'90% 18%',
+      bio:'The engine room. Dynamics, groove, and the build that lifts every chorus.',
+      fact:'Warms up on a practice pad in the truck before every single show, rain or shine.' }
+  ];
+  renderVals() { return { members: this.members }; }
+}
+</script>
+</body>
+</html>

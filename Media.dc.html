@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Zilla+Slab:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{margin:0; background:#0D0D0D; color:#F4E9D8; font-family:'Manrope',sans-serif; overflow-x:hidden;}
+    ::selection{background:#C47A2C; color:#0D0D0D;}
+    [data-zoom]:hover [data-zoom-img]{transform:scale(1.07);}
+    [data-vid]:hover [data-vid-img]{transform:scale(1.06);}
+    [data-vid]:hover [data-vid-play]{transform:scale(1.1);}
+  </style>
+</helmet>
+
+<div style="background:#0D0D0D;">
+  <dc-import name="Nav" current="media" hint-size="100%,80px"></dc-import>
+
+  <!-- HEADER -->
+  <section style="position:relative; padding:170px 5vw 84px; overflow:hidden;">
+    <div style="position:absolute; inset:0; background-image:url('assets/bw-duo.jpg'); background-size:cover; background-position:center 26%;"></div>
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(13,13,13,0.78), rgba(13,13,13,0.93)); "></div>
+    <div style="position:relative; max-width:1200px; margin:0 auto;">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+        <span style="color:#C47A2C;">&#9733;</span>
+        <span style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.34em; text-transform:uppercase; color:#C47A2C;">Watch &amp; Listen</span>
+      </div>
+      <h1 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(44px,7vw,92px); line-height:0.94; text-transform:uppercase; margin:0; color:#F4E9D8;">Media</h1>
+      <p style="font-family:'Zilla Slab',serif; font-size:clamp(17px,2vw,23px); color:#F4E9D8; opacity:0.9; max-width:50ch; margin:22px 0 0; line-height:1.5;">Performance videos, photos from the floor, and everything you need to feel the room before you book it.</p>
+    </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section style="padding:80px 5vw; background:#0D0D0D;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:40px;">
+        <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(28px,4vw,48px); text-transform:uppercase; color:#F4E9D8; margin:0;">Performance Videos</h2>
+        <a href="https://www.instagram.com/texaswhiskeyandyou" target="_blank" rel="noopener" style="font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:0.14em; text-transform:uppercase; color:#C47A2C; text-decoration:none; border-bottom:1px solid rgba(196,122,44,0.4); padding-bottom:4px;">More on Instagram &rarr;</a>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:20px;" data-video-grid>
+        <sc-for list="{{ videos }}" as="v" hint-placeholder-count="4">
+          <div onClick="{{ v.open }}" style="position:relative; aspect-ratio:16/9; border-radius:5px; overflow:hidden; cursor:pointer; border:1px solid rgba(244,233,216,0.08);" data-vid>
+            <div style="position:absolute; inset:0; background-image:{{ v.bg }}; background-size:cover; background-position:center; transition:transform 0.6s ease;" data-vid-img></div>
+            <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(13,13,13,0.1), rgba(13,13,13,0.75));"></div>
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+              <div style="width:66px; height:66px; border-radius:50%; background:rgba(13,13,13,0.55); border:1.5px solid rgba(244,233,216,0.5); display:flex; align-items:center; justify-content:center; transition:transform 0.25s ease;" data-vid-play>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#F4E9D8"><path d="M8 5v14l11-7z"></path></svg>
+              </div>
+            </div>
+            <div style="position:absolute; left:20px; bottom:18px; right:20px;">
+              <div style="font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:#D38B36; margin-bottom:5px;">{{ v.tag }}</div>
+              <div style="font-family:'Oswald',sans-serif; font-weight:600; font-size:20px; text-transform:uppercase; color:#F4E9D8;">{{ v.title }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO GALLERY -->
+  <section style="padding:60px 5vw 90px; background:#161616;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(28px,4vw,48px); text-transform:uppercase; color:#F4E9D8; margin:0 0 28px;">Photo Gallery</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:34px;">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5">
+          <button onClick="{{ c.go }}" style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; padding:10px 20px; border:1px solid {{ c.border }}; border-radius:2px; cursor:pointer; color:{{ c.color }}; background:{{ c.bg }}; transition:all 0.2s ease;">{{ c.label }}</button>
+        </sc-for>
+      </div>
+      <div style="columns:3; column-gap:14px;" data-gallery>
+        <sc-for list="{{ photos }}" as="p" hint-placeholder-count="9">
+          <div onClick="{{ p.open }}" style="break-inside:avoid; margin-bottom:14px; overflow:hidden; border-radius:3px; cursor:pointer; position:relative;" data-zoom>
+            <img src="{{ p.src }}" alt="{{ p.alt }}" style="width:100%; display:block; transition:transform 0.6s ease;" data-zoom-img loading="lazy">
+            <div style="position:absolute; left:12px; bottom:12px; font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#F4E9D8; background:rgba(13,13,13,0.6); padding:5px 10px; border-radius:2px; opacity:0.9;">{{ p.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRESS KIT -->
+  <section style="padding:90px 5vw; background:#0D0D0D;">
+    <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:0; background:linear-gradient(135deg,#161616,#1F1F1F); border:1px solid rgba(196,122,44,0.22); border-radius:6px; overflow:hidden;" data-presskit>
+      <div style="position:relative; min-height:300px; overflow:hidden;">
+        <div style="position:absolute; inset:0; background-image:url('assets/longhorn-sign.jpg'); background-size:cover; background-position:center;"></div>
+        <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(22,22,22,0.2), rgba(31,31,31,0.85));"></div>
+      </div>
+      <div style="padding:50px 46px;">
+        <div style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.3em; text-transform:uppercase; color:#C47A2C; margin-bottom:14px;">For Bookers &amp; Press</div>
+        <h2 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(28px,3.4vw,40px); text-transform:uppercase; color:#F4E9D8; margin:0 0 20px;">Download The Press Kit</h2>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:30px;">
+          <div style="display:flex; align-items:center; gap:10px; color:#A8A8A8; font-size:15px;"><span style="color:#D38B36;">&#10003;</span> Band biography &amp; story</div>
+          <div style="display:flex; align-items:center; gap:10px; color:#A8A8A8; font-size:15px;"><span style="color:#D38B36;">&#10003;</span> High-resolution photos</div>
+          <div style="display:flex; align-items:center; gap:10px; color:#A8A8A8; font-size:15px;"><span style="color:#D38B36;">&#10003;</span> Logos &amp; brand assets</div>
+          <div style="display:flex; align-items:center; gap:10px; color:#A8A8A8; font-size:15px;"><span style="color:#D38B36;">&#10003;</span> Booking &amp; tech information</div>
+        </div>
+        <a href="#" style="display:inline-flex; align-items:center; gap:10px; font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:0.1em; text-transform:uppercase; color:#0D0D0D; background:linear-gradient(135deg,#D38B36,#A45A20); padding:16px 32px; border-radius:2px; text-decoration:none; box-shadow:0 8px 26px rgba(196,122,44,0.4);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"></path></svg>
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX (built in logic to avoid literal-src during placeholder pass) -->
+  {{ lightbox }}
+
+  <dc-import name="Footer" hint-size="100%,520px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;youTubeId&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { cat: 'all', lb: null };
+
+  videoList = [
+    { poster:'assets/twy-live1.jpg', title:'Live at Lexus Box Garden', tag:'Full Set', useId:true },
+    { poster:'assets/bw-barn-band.jpg', title:'Tennessee Whiskey', tag:'Performance', useId:false },
+    { poster:'assets/vocal-green.jpg', title:'Cold', tag:'Performance', useId:false },
+    { poster:'assets/live-crowd.jpg', title:'Crowd Energy Reel', tag:'Highlights', useId:false }
+  ];
+  photoList = [
+    { src:'assets/vocal-green.jpg', cat:'live', label:'Live Shows', alt:'Lead vocals under stage lights' },
+    { src:'assets/live-crowd.jpg', cat:'crowd', label:'Crowd', alt:'Packed dance floor' },
+    { src:'assets/bw-guitar-case.jpg', cat:'bts', label:'Behind The Scenes', alt:'Guitar in case backstage' },
+    { src:'assets/bw-duo.jpg', cat:'live', label:'Live Shows', alt:'Two members performing' },
+    { src:'assets/band-barn-group.jpg', cat:'bts', label:'Behind The Scenes', alt:'The band together' },
+    { src:'assets/longhorn-sign.jpg', cat:'venues', label:'Venues', alt:'Stage backdrop signage' },
+    { src:'assets/bw-pedals.jpg', cat:'bts', label:'Behind The Scenes', alt:'Setting the stage' },
+    { src:'assets/twy-live1.jpg', cat:'venues', label:'Venues', alt:'Outdoor amphitheater stage' },
+    { src:'assets/bw-barn-band.jpg', cat:'live', label:'Live Shows', alt:'Full band in the barn' },
+    { src:'assets/band-tree1.jpg', cat:'crowd', label:'Promo', alt:'Band portrait outdoors' }
+  ];
+  catDefs = [
+    { key:'all', label:'All' },
+    { key:'live', label:'Live Shows' },
+    { key:'bts', label:'Behind The Scenes' },
+    { key:'crowd', label:'Crowd' },
+    { key:'venues', label:'Venues' }
+  ];
+
+  _instagram() { window.open('https://www.instagram.com/texaswhiskeyandyou', '_blank'); }
+
+  renderVals() {
+    const ytId = (this.props.youTubeId || '').trim();
+    const videos = this.videoList.map(v => ({
+      title: v.title, tag: v.tag,
+      bg: "url('" + v.poster + "')",
+      open: () => {
+        if (v.useId && ytId) this.setState({ lb: { kind:'video', src:'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0' } });
+        else this._instagram();
+      }
+    }));
+    const cats = this.catDefs.map(c => {
+      const on = this.state.cat === c.key;
+      return {
+        label: c.label,
+        go: () => this.setState({ cat: c.key }),
+        color: on ? '#0D0D0D' : '#A8A8A8',
+        bg: on ? 'linear-gradient(135deg,#D38B36,#A45A20)' : 'transparent',
+        border: on ? 'transparent' : 'rgba(244,233,216,0.18)'
+      };
+    });
+    const photos = this.photoList
+      .filter(p => this.state.cat === 'all' || p.cat === this.state.cat)
+      .map(p => ({ src:p.src, alt:p.alt, label:p.label, open: () => this.setState({ lb:{ kind:'image', src:p.src } }) }));
+    const lb = this.state.lb;
+    const close = () => this.setState({ lb: null });
+    const h = React.createElement;
+    const closeBtn = h('button', { onClick: close, 'aria-label': 'Close',
+      style: { position:'fixed', top:'24px', right:'28px', width:'46px', height:'46px', borderRadius:'50%', border:'1px solid rgba(244,233,216,0.3)', background:'rgba(13,13,13,0.6)', color:'#F4E9D8', fontSize:'22px', cursor:'pointer', zIndex:2001 } }, '\u00d7');
+    let lightbox = null;
+    if (lb && lb.kind === 'image') {
+      lightbox = h('div', { onClick: close, style: { position:'fixed', inset:0, zIndex:2000, background:'rgba(8,8,8,0.94)', display:'flex', alignItems:'center', justifyContent:'center', padding:'5vw', cursor:'zoom-out' } },
+        h('img', { src: lb.src, alt:'Texas, Whiskey & You', style:{ maxWidth:'92vw', maxHeight:'88vh', borderRadius:'4px', boxShadow:'0 30px 90px rgba(0,0,0,0.7)' } }),
+        closeBtn);
+    } else if (lb && lb.kind === 'video') {
+      lightbox = h('div', { onClick: close, style: { position:'fixed', inset:0, zIndex:2000, background:'rgba(8,8,8,0.94)', display:'flex', alignItems:'center', justifyContent:'center', padding:'5vw' } },
+        h('div', { style:{ width:'min(1000px,92vw)', aspectRatio:'16/9', borderRadius:'5px', overflow:'hidden', boxShadow:'0 30px 90px rgba(0,0,0,0.7)' } },
+          h('iframe', { src: lb.src, title:'Texas, Whiskey & You', allow:'autoplay; encrypted-media; picture-in-picture', allowFullScreen:true, style:{ width:'100%', height:'100%', border:'none' } })),
+        closeBtn);
+    }
+    return { videos, cats, photos, lightbox };
+  }
+}
+</script>
+</body>
+</html>

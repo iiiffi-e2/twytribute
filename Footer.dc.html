@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="font-family:'Manrope',sans-serif; background:#0D0D0D; border-top:1px solid rgba(196,122,44,0.18); position:relative; overflow:hidden;">
+  <div style="position:absolute; inset:0; background:radial-gradient(120% 80% at 50% 0%, rgba(196,122,44,0.10), transparent 60%); pointer-events:none;"></div>
+
+  <div style="position:relative; max-width:1200px; margin:0 auto; padding:70px 5vw 0;">
+    <div style="display:flex; flex-wrap:wrap; gap:28px; align-items:flex-end; justify-content:space-between; padding-bottom:46px; border-bottom:1px solid rgba(255,255,255,0.07);">
+      <div style="max-width:560px;">
+        <div style="font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.34em; color:#C47A2C; text-transform:uppercase;">Stay on the trail</div>
+        <h3 style="font-family:'Oswald',sans-serif; font-weight:700; font-size:clamp(30px,4vw,46px); line-height:0.98; letter-spacing:0.01em; text-transform:uppercase; color:#F4E9D8; margin:14px 0 0;">Never miss a show</h3>
+        <p style="color:#A8A8A8; font-size:15px; line-height:1.6; margin:14px 0 0;">Tour dates, new videos, and where the whiskey&rsquo;s pouring next &mdash; straight to your inbox.</p>
+      </div>
+      <form onSubmit="{{ onSignup }}" style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input value="{{ email }}" onInput="{{ onEmail }}" type="email" placeholder="your@email.com" style="background:#161616; border:1px solid rgba(244,233,216,0.16); border-radius:2px; padding:15px 18px; color:#F4E9D8; font-family:'Manrope',sans-serif; font-size:15px; min-width:240px; outline:none;">
+        <button type="submit" style="font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:#0D0D0D; background:linear-gradient(135deg,#D38B36,#A45A20); border:none; padding:15px 26px; border-radius:2px; cursor:pointer; white-space:nowrap;">{{ signupLabel }}</button>
+      </form>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:40px; padding:54px 0;" data-foot-grid>
+      <div>
+        <img src="assets/logo-twy.png" alt="Texas, Whiskey & You" style="width:160px; height:auto; margin-bottom:18px;">
+        <p style="color:#A8A8A8; font-size:14px; line-height:1.7; max-width:340px;">North Texas&rsquo; premier live tribute to the soul, grit, and songs of Chris Stapleton. Festivals, venues, wineries, corporate &amp; private events.</p>
+      </div>
+      <div>
+        <div style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:#F4E9D8; margin-bottom:18px;">Explore</div>
+        <a href="Home.dc.html" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">Home</a>
+        <a href="Shows.dc.html" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">Shows</a>
+        <a href="Media.dc.html" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">Media</a>
+        <a href="Band.dc.html" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">The Band</a>
+      </div>
+      <div>
+        <div style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:#F4E9D8; margin-bottom:18px;">Connect</div>
+        <a href="Book.dc.html" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">Book The Band</a>
+        <a href="https://www.instagram.com/texaswhiskeyandyou" target="_blank" rel="noopener" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">Instagram</a>
+        <a href="mailto:sdmbooking@yahoo.com" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">sdmbooking@yahoo.com</a>
+        <a href="Contact.dc.html" style="display:block; color:#A8A8A8; text-decoration:none; font-size:14px; padding:7px 0;">Contact</a>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between; padding:24px 0 30px; border-top:1px solid rgba(255,255,255,0.07);">
+      <div style="color:#6f6f6f; font-size:12.5px;">&copy; {{ year }} Texas, Whiskey &amp; You &middot; A Tribute to Chris Stapleton &middot; North Texas</div>
+      <a href="https://www.instagram.com/texaswhiskeyandyou" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:9px; color:#C47A2C; text-decoration:none; font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.14em; text-transform:uppercase;">
+        <span style="display:inline-flex; width:30px; height:30px; align-items:center; justify-content:center; border:1px solid rgba(196,122,44,0.4); border-radius:50%;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C47A2C" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.2" fill="#C47A2C" stroke="none"></circle></svg>
+        </span>
+        @texaswhiskeyandyou
+      </a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:520}}">
+class Component extends DCLogic {
+  state = { email: '', sent: false };
+  componentDidMount() {
+    this._resize = () => {
+      const g = this.el && this.el.querySelector('[data-foot-grid]');
+      if (g) g.style.gridTemplateColumns = window.innerWidth < 760 ? '1fr' : '1.6fr 1fr 1fr';
+    };
+    this._resize();
+    window.addEventListener('resize', this._resize);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._resize); }
+  renderVals() {
+    return {
+      year: new Date().getFullYear(),
+      email: this.state.email,
+      signupLabel: this.state.sent ? 'You\u2019re in \u2713' : 'Sign Up',
+      onEmail: (e) => this.setState({ email: e.target.value, sent: false }),
+      onSignup: (e) => { e.preventDefault(); if (this.state.email) this.setState({ sent: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
