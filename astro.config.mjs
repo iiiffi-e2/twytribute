@@ -3,8 +3,7 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: 'https://twytribute.com',
-  // output will change to 'server' or 'hybrid' before Task 14 API routes
-  output: 'static',
+  output: 'server',
   adapter: vercel({ webAnalytics: false }),
   image: {
     domains: ['cdn.sanity.io'],
