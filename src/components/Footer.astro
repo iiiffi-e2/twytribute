@@ -1,0 +1,257 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__glow"></div>
+
+  <div class="footer__inner">
+    <div class="footer__newsletter">
+      <div class="footer__newsletter-copy">
+        <div class="section-label">Stay on the trail</div>
+        <h3 class="footer__headline">Never miss a show</h3>
+        <p class="footer__desc">
+          Tour dates, new videos, and where the whiskey&rsquo;s pouring next &mdash; straight to your inbox.
+        </p>
+      </div>
+      <form class="footer__form" data-newsletter-form>
+        <input
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          class="footer__input"
+          data-newsletter-email
+          required
+        />
+        <button type="submit" class="footer__submit" data-newsletter-btn>Sign Up</button>
+      </form>
+    </div>
+
+    <div class="footer__grid" data-foot-grid>
+      <div>
+        <img src="/assets/logo-twy.png" alt="Texas, Whiskey & You" class="footer__logo" />
+        <p class="footer__about">
+          North Texas&rsquo; premier live tribute to the soul, grit, and songs of Chris Stapleton. Festivals, venues, wineries, corporate &amp; private events.
+        </p>
+      </div>
+      <div>
+        <div class="footer__col-title">Explore</div>
+        <a href="/" class="footer__link">Home</a>
+        <a href="/shows" class="footer__link">Shows</a>
+        <a href="/media" class="footer__link">Media</a>
+        <a href="/band" class="footer__link">The Band</a>
+      </div>
+      <div>
+        <div class="footer__col-title">Connect</div>
+        <a href="/book" class="footer__link">Book The Band</a>
+        <a href="https://www.instagram.com/texaswhiskeyandyou" target="_blank" rel="noopener" class="footer__link">Instagram</a>
+        <a href="mailto:sdmbooking@yahoo.com" class="footer__link">sdmbooking@yahoo.com</a>
+        <a href="/contact" class="footer__link">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="footer__copyright">
+        &copy; {year} Texas, Whiskey &amp; You &middot; A Tribute to Chris Stapleton &middot; North Texas
+      </div>
+      <a href="https://www.instagram.com/texaswhiskeyandyou" target="_blank" rel="noopener" class="footer__instagram">
+        <span class="footer__instagram-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </span>
+        @texaswhiskeyandyou
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]').forEach((form) => {
+    const emailInput = form.querySelector<HTMLInputElement>('[data-newsletter-email]');
+    const submitBtn = form.querySelector<HTMLButtonElement>('[data-newsletter-btn]');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!emailInput?.value) return;
+      if (submitBtn) submitBtn.textContent = "You're in ✓";
+    });
+
+    emailInput?.addEventListener('input', () => {
+      if (submitBtn) submitBtn.textContent = 'Sign Up';
+    });
+  });
+</script>
+
+<style>
+  .footer {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    border-top: 1px solid rgba(196, 122, 44, 0.18);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .footer__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 80% at 50% 0%, rgba(196, 122, 44, 0.10), transparent 60%);
+    pointer-events: none;
+  }
+
+  .footer__inner {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 70px 5vw 0;
+  }
+
+  .footer__newsletter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 46px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .footer__newsletter-copy {
+    max-width: 560px;
+  }
+
+  .footer__headline {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 4vw, 46px);
+    line-height: 0.98;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 14px 0 0;
+  }
+
+  .footer__desc {
+    color: var(--color-text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 14px 0 0;
+  }
+
+  .footer__form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .footer__input {
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.16);
+    border-radius: 2px;
+    padding: 15px 18px;
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    min-width: 240px;
+    outline: none;
+  }
+
+  .footer__submit {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-bg);
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+    border: none;
+    padding: 15px 26px;
+    border-radius: 2px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 40px;
+    padding: 54px 0;
+  }
+
+  .footer__logo {
+    width: 160px;
+    height: auto;
+    margin-bottom: 18px;
+  }
+
+  .footer__about {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 340px;
+    margin: 0;
+  }
+
+  .footer__col-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin-bottom: 18px;
+  }
+
+  .footer__link {
+    display: block;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 7px 0;
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 0 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .footer__copyright {
+    color: var(--color-text-dim);
+    font-size: 12.5px;
+  }
+
+  .footer__instagram {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .footer__instagram-icon {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(196, 122, 44, 0.4);
+    border-radius: 50%;
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 759px) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

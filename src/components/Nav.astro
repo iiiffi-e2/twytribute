@@ -1,0 +1,261 @@
+---
+interface Props {
+  current?: string;
+}
+
+const { current = '' } = Astro.props;
+const activeKey = current.toLowerCase();
+
+const links = [
+  { label: 'Home', href: '/', key: 'home' },
+  { label: 'Shows', href: '/shows', key: 'shows' },
+  { label: 'Media', href: '/media', key: 'media' },
+  { label: 'Book', href: '/book', key: 'book' },
+  { label: 'The Band', href: '/band', key: 'band' },
+  { label: 'Contact', href: '/contact', key: 'contact' },
+];
+---
+
+<div class="nav-wrap" data-nav-root>
+  <div class="progress-track">
+    <div class="progress-fill" data-progress-fill></div>
+  </div>
+
+  <nav class="nav-bar" data-nav-bar>
+    <a href="/" class="nav-logo">
+      <img src="/assets/twyicon.png" alt="Texas, Whiskey & You" class="nav-logo__icon" />
+      <span class="nav-logo__text">
+        <span class="nav-logo__title">TEXAS, WHISKEY &amp; YOU</span>
+        <span class="nav-logo__tagline">A TRIBUTE TO CHRIS STAPLETON</span>
+      </span>
+    </a>
+
+    <div class="nav-desktop" data-desktop-nav>
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class:list={['nav-link', { 'nav-link--active': link.key === activeKey }]}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      <a href="/book" class="nav-cta">Book The Band</a>
+    </div>
+
+    <button type="button" class="nav-mobile-btn" data-mobile-btn aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" data-mobile-menu hidden>
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          class:list={['mobile-menu__link', { 'mobile-menu__link--active': link.key === activeKey }]}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+    <a href="/book" class="mobile-menu__cta">Book The Band</a>
+  </div>
+</div>
+
+<script src="../scripts/nav.ts"></script>
+
+<style>
+  .nav-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    font-family: var(--font-body);
+  }
+
+  .progress-track {
+    height: 3px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--color-accent-dark), var(--color-accent-light));
+    transition: width 0.1s linear;
+  }
+
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 5vw;
+    background: rgba(13, 13, 13, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(196, 122, 44, 0.16);
+    transition: background 0.3s ease;
+  }
+
+  .nav-bar--scrolled {
+    background: rgba(13, 13, 13, 0.92);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .nav-logo__icon {
+    height: 42px;
+    width: 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+  }
+
+  .nav-logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .nav-logo__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.14em;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  .nav-logo__tagline {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 9px;
+    letter-spacing: 0.34em;
+    color: var(--color-accent);
+    margin-top: 3px;
+  }
+
+  .nav-desktop {
+    display: none;
+    align-items: center;
+    gap: 26px;
+  }
+
+  .nav-link {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--color-text);
+    padding-bottom: 3px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link--active {
+    color: var(--color-accent-light);
+    border-bottom-color: var(--color-accent-light);
+  }
+
+  .nav-cta {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--color-bg);
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+    padding: 11px 22px;
+    border-radius: 2px;
+    box-shadow: 0 4px 18px rgba(196, 122, 44, 0.35);
+  }
+
+  .nav-mobile-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid rgba(244, 233, 216, 0.3);
+    border-radius: 2px;
+    padding: 9px 11px;
+    cursor: pointer;
+    color: var(--color-text);
+  }
+
+  .nav-mobile-btn span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--color-text);
+    margin: 4px 0;
+  }
+
+  .mobile-menu {
+    background: var(--color-bg);
+    border-bottom: 1px solid rgba(196, 122, 44, 0.2);
+    padding: 8px 5vw 22px;
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu__link {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-text);
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .mobile-menu__link--active {
+    color: var(--color-accent-light);
+  }
+
+  .mobile-menu__cta {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-bg);
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+    padding: 15px;
+    border-radius: 2px;
+  }
+
+  @media (min-width: 1120px) {
+    .nav-desktop {
+      display: flex;
+    }
+
+    .nav-mobile-btn {
+      display: none;
+    }
+  }
+</style>

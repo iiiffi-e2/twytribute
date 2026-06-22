@@ -1,9 +1,32 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
 
 const title = 'Texas, Whiskey & You';
 ---
 
 <BaseLayout title={title}>
-  <h1>{title}</h1>
+  <Nav current="home" />
+  <main class="page-main">
+    <h1 class="section-title">Texas, Whiskey &amp; You</h1>
+    <p class="page-lead">North Texas&rsquo;s premier Chris Stapleton tribute experience.</p>
+  </main>
+  <Footer />
 </BaseLayout>
+
+<style>
+  .page-main {
+    min-height: 60vh;
+    padding: 120px 5vw 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .page-lead {
+    color: var(--color-text-muted);
+    font-size: 18px;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+</style>
