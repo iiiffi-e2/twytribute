@@ -32,6 +32,14 @@ Lava Cantina (Aug 15, 2026) is marked as the featured upcoming show.
 
 ### Usage
 
+Add variables to `.env` in the repo root (see `.env.example`), or pass them inline:
+
+```bash
+node scripts/seed-sanity.mjs
+```
+
+Or inline:
+
 ```bash
 SANITY_PROJECT_ID=your-project-id \
 SANITY_DATASET=production \

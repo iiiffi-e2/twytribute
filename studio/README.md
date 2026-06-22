@@ -12,6 +12,8 @@ This studio was scaffolded manually with a placeholder project ID. Before using 
 
 ## Scripts
 
+Requires Sanity Studio **v5+** (currently `sanity@6.x`) and **React 19.2+**.
+
 ```bash
 npm install
 npm run dev      # Local studio at http://localhost:3333

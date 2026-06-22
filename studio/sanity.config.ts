@@ -7,7 +7,7 @@ export default defineConfig({
   name: 'default',
   title: 'Texas, Whiskey & You',
 
-  projectId: 'YOUR_PROJECT_ID',
+  projectId: 'f2uhaboh',
   dataset: 'production',
 
   basePath: '/studio',
