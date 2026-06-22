@@ -1,0 +1,384 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import GalleryGrid from '../components/GalleryGrid.astro';
+import VideoGrid from '../components/VideoGrid.astro';
+import type { GalleryItem } from '../components/GalleryGrid.astro';
+import type { VideoItem } from '../components/VideoGrid.astro';
+
+const DEFAULT_YOUTUBE_ID = 'ZUz16UbeLPU';
+
+const MOCK_GALLERY: GalleryItem[] = [
+  {
+    _id: 'gallery-vocal-green',
+    imageUrl: '/assets/vocal-green.jpg',
+    category: 'live',
+    label: 'Live Shows',
+    alt: 'Lead vocals under stage lights',
+  },
+  {
+    _id: 'gallery-live-crowd',
+    imageUrl: '/assets/live-crowd.jpg',
+    category: 'crowd',
+    label: 'Crowd',
+    alt: 'Packed dance floor',
+  },
+  {
+    _id: 'gallery-bw-guitar-case',
+    imageUrl: '/assets/bw-guitar-case.jpg',
+    category: 'bts',
+    label: 'Behind The Scenes',
+    alt: 'Guitar in case backstage',
+  },
+  {
+    _id: 'gallery-bw-duo',
+    imageUrl: '/assets/bw-duo.jpg',
+    category: 'live',
+    label: 'Live Shows',
+    alt: 'Two members performing',
+  },
+  {
+    _id: 'gallery-band-barn-group',
+    imageUrl: '/assets/band-barn-group.jpg',
+    category: 'bts',
+    label: 'Behind The Scenes',
+    alt: 'The band together',
+  },
+  {
+    _id: 'gallery-longhorn-sign',
+    imageUrl: '/assets/longhorn-sign.jpg',
+    category: 'venues',
+    label: 'Venues',
+    alt: 'Stage backdrop signage',
+  },
+  {
+    _id: 'gallery-bw-pedals',
+    imageUrl: '/assets/bw-pedals.jpg',
+    category: 'bts',
+    label: 'Behind The Scenes',
+    alt: 'Setting the stage',
+  },
+  {
+    _id: 'gallery-twy-live1',
+    imageUrl: '/assets/twy-live1.jpg',
+    category: 'venues',
+    label: 'Venues',
+    alt: 'Outdoor amphitheater stage',
+  },
+  {
+    _id: 'gallery-bw-barn-band',
+    imageUrl: '/assets/bw-barn-band.jpg',
+    category: 'live',
+    label: 'Live Shows',
+    alt: 'Full band in the barn',
+  },
+  {
+    _id: 'gallery-band-tree1',
+    imageUrl: '/assets/band-tree1.jpg',
+    category: 'crowd',
+    label: 'Promo',
+    alt: 'Band portrait outdoors',
+  },
+];
+
+const MOCK_VIDEOS: VideoItem[] = [
+  {
+    _id: 'video-live-at-lexus-box-garden',
+    title: 'Live at Lexus Box Garden',
+    tag: 'Full Set',
+    youtubeId: DEFAULT_YOUTUBE_ID,
+    posterUrl: '/assets/twy-live1.jpg',
+  },
+  {
+    _id: 'video-tennessee-whiskey',
+    title: 'Tennessee Whiskey',
+    tag: 'Performance',
+    posterUrl: '/assets/bw-barn-band.jpg',
+  },
+  {
+    _id: 'video-cold',
+    title: 'Cold',
+    tag: 'Performance',
+    posterUrl: '/assets/vocal-green.jpg',
+  },
+  {
+    _id: 'video-crowd-energy-reel',
+    title: 'Crowd Energy Reel',
+    tag: 'Highlights',
+    posterUrl: '/assets/live-crowd.jpg',
+  },
+];
+
+const projectId = import.meta.env.SANITY_PROJECT_ID ?? '';
+let galleryItems: GalleryItem[] = MOCK_GALLERY;
+let videos: VideoItem[] = MOCK_VIDEOS;
+
+if (projectId) {
+  try {
+    const { sanityClient } = await import('../lib/sanity');
+    const { GALLERY_QUERY, VIDEOS_QUERY } = await import('../lib/queries');
+    const [fetchedGallery, fetchedVideos] = await Promise.all([
+      sanityClient.fetch<GalleryItem[]>(GALLERY_QUERY),
+      sanityClient.fetch<VideoItem[]>(VIDEOS_QUERY),
+    ]);
+
+    if (Array.isArray(fetchedGallery) && fetchedGallery.length > 0) {
+      galleryItems = fetchedGallery.map((item) => ({
+        _id: item._id,
+        imageUrl: item.imageUrl,
+        alt: item.alt || 'Gallery photo',
+        category: item.category,
+        label: item.label,
+      }));
+    }
+
+    if (Array.isArray(fetchedVideos) && fetchedVideos.length > 0) {
+      videos = fetchedVideos.map((item) => ({
+        _id: item._id,
+        title: item.title,
+        tag: item.tag,
+        youtubeId: item.youtubeId,
+        posterUrl: item.posterUrl,
+      }));
+    }
+  } catch {
+    // Fall back to mock data when Sanity is unreachable.
+  }
+}
+---
+
+<BaseLayout title="Media | Texas, Whiskey & You">
+  <Nav current="media" />
+
+  <section class="media-header">
+    <div class="media-header__bg"></div>
+    <div class="media-header__overlay"></div>
+    <div class="media-header__inner">
+      <div class="media-header__eyebrow">
+        <span class="media-header__star" aria-hidden="true">&#9733;</span>
+        <span class="media-header__label">Watch &amp; Listen</span>
+      </div>
+      <h1 class="media-header__title">Media</h1>
+      <p class="media-header__lead">
+        Performance videos, photos from the floor, and everything you need to feel the room before you book it.
+      </p>
+    </div>
+  </section>
+
+  <VideoGrid videos={videos} />
+  <GalleryGrid items={galleryItems} />
+
+  <section class="press-kit">
+    <div class="press-kit__card" data-presskit>
+      <div class="press-kit__image">
+        <div class="press-kit__image-bg"></div>
+        <div class="press-kit__image-overlay"></div>
+      </div>
+      <div class="press-kit__content">
+        <div class="press-kit__eyebrow">For Bookers &amp; Press</div>
+        <h2 class="press-kit__title">Download The Press Kit</h2>
+        <ul class="press-kit__list">
+          <li class="press-kit__list-item">
+            <span class="press-kit__check" aria-hidden="true">&#10003;</span>
+            Band biography &amp; story
+          </li>
+          <li class="press-kit__list-item">
+            <span class="press-kit__check" aria-hidden="true">&#10003;</span>
+            High-resolution photos
+          </li>
+          <li class="press-kit__list-item">
+            <span class="press-kit__check" aria-hidden="true">&#10003;</span>
+            Logos &amp; brand assets
+          </li>
+          <li class="press-kit__list-item">
+            <span class="press-kit__check" aria-hidden="true">&#10003;</span>
+            Booking &amp; tech information
+          </li>
+        </ul>
+        <a href="#" class="press-kit__btn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2">
+            <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"></path>
+          </svg>
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .media-header {
+    position: relative;
+    padding: 170px 5vw 84px;
+    overflow: hidden;
+  }
+
+  .media-header__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/bw-duo.jpg');
+    background-size: cover;
+    background-position: center 26%;
+  }
+
+  .media-header__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.78), rgba(13, 13, 13, 0.93));
+  }
+
+  .media-header__inner {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .media-header__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .media-header__star {
+    color: var(--color-accent);
+  }
+
+  .media-header__label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .media-header__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(44px, 7vw, 92px);
+    line-height: 0.94;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .media-header__lead {
+    font-family: var(--font-serif);
+    font-size: clamp(17px, 2vw, 23px);
+    color: var(--color-text);
+    opacity: 0.9;
+    max-width: 50ch;
+    margin: 22px 0 0;
+    line-height: 1.5;
+  }
+
+  .press-kit {
+    padding: 90px 5vw;
+    background: var(--color-bg);
+  }
+
+  .press-kit__card {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-hover));
+    border: 1px solid rgba(196, 122, 44, 0.22);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .press-kit__image {
+    position: relative;
+    min-height: 300px;
+    overflow: hidden;
+  }
+
+  .press-kit__image-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/longhorn-sign.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  .press-kit__image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(22, 22, 22, 0.2), rgba(31, 31, 31, 0.85));
+  }
+
+  .press-kit__content {
+    padding: 50px 46px;
+  }
+
+  .press-kit__eyebrow {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 14px;
+  }
+
+  .press-kit__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 40px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 20px;
+  }
+
+  .press-kit__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .press-kit__list-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text-muted);
+    font-size: 15px;
+  }
+
+  .press-kit__check {
+    color: var(--color-accent-light);
+  }
+
+  .press-kit__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-bg);
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+    padding: 16px 32px;
+    border-radius: 2px;
+    text-decoration: none;
+    box-shadow: 0 8px 26px rgba(196, 122, 44, 0.4);
+  }
+
+  @media (max-width: 800px) {
+    .press-kit__card {
+      grid-template-columns: 1fr;
+    }
+
+    .press-kit__content {
+      padding: 40px 28px;
+    }
+  }
+</style>
