@@ -23,16 +23,19 @@ Static images referenced by the Astro site and legacy `.dc.html` prototypes. Pat
 
 ## Current status
 
-**All files in this directory are auto-generated placeholders** (dark background, gold label). They were created because no production images were found in the repository or parent `Projects` tree.
+Production images are copied from the repo-root `assets/` folder (same filenames). The site serves them from `/assets/…`.
 
-Replace each file with the real photo or logo, keeping the same filename so existing references in `src/` and `.dc.html` continue to work.
+To refresh after updating `assets/`:
 
-## Sourcing originals
+```powershell
+Copy-Item assets/* public/assets/ -Force
+```
 
-1. Copy from the live site or design handoff into this folder.
-2. Re-run `node scripts/seed-sanity.mjs` after adding files to upload gallery/media images to Sanity (optional CMS path).
+Optional: re-run `node scripts/seed-sanity.mjs` to upload gallery/media images to Sanity.
 
-## Regenerating placeholders
+## Placeholder fallback
+
+If originals are missing, regenerate labeled placeholders:
 
 ```powershell
 powershell -File scripts/generate-placeholder-assets.ps1
