@@ -1,0 +1,17 @@
+# Sanity build output
+dist/
+.sanity/
+
+# Dependencies
+node_modules/
+
+# Environment variables (may contain tokens)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS
+.DS_Store
