@@ -1,10 +1,23 @@
 ---
+import '../styles/global.css';
+
 interface Props {
   title: string;
   description?: string;
 }
 
 const { title, description = 'Texas, Whiskey & You — North Texas\'s premier Chris Stapleton tribute experience.' } = Astro.props;
+
+const fontPreloads = [
+  '/fonts/oswald.woff2',
+  '/fonts/oswald-700.woff2',
+  '/fonts/manrope.woff2',
+  '/fonts/manrope-600.woff2',
+  '/fonts/manrope-700.woff2',
+  '/fonts/zilla-slab-500.woff2',
+  '/fonts/zilla-slab-600.woff2',
+  '/fonts/zilla-slab-700.woff2',
+];
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const musicGroupSchema = {
@@ -36,14 +49,11 @@ const musicGroupSchema = {
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonicalURL} />
   <script type="application/ld+json" set:html={JSON.stringify(musicGroupSchema)} />
-  <link rel="preload" href="/fonts/oswald.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
+  {fontPreloads.map((href) => (
+    <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+  ))}
 </head>
 <body>
   <slot />
 </body>
 </html>
-
-<style is:global>
-  @import '../styles/global.css';
-</style>
