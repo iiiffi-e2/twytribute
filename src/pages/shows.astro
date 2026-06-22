@@ -1,0 +1,321 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FeaturedShow from '../components/FeaturedShow.astro';
+import ShowList from '../components/ShowList.astro';
+import type { ShowRow } from '../components/ShowList.astro';
+import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus } from '../lib/shows';
+
+interface RawShow {
+  _id: string;
+  venue: string;
+  city: string;
+  date: string;
+  ticketUrl?: string;
+  isFeatured?: boolean;
+  status?: 'upcoming' | 'past';
+  recapUrl?: string;
+}
+
+const MOCK_SHOWS: RawShow[] = [
+  {
+    _id: 'show-lava-cantina-2026-08-15',
+    venue: 'Lava Cantina',
+    city: 'The Colony, TX',
+    date: '2026-08-15T20:00:00-05:00',
+    status: 'upcoming',
+    isFeatured: true,
+  },
+  {
+    _id: 'show-mavericks-dance-hall-2026-08-29',
+    venue: 'Mavericks Dance Hall',
+    city: 'Arlington, TX',
+    date: '2026-08-29T21:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-hanks-texas-grill-2026-09-12',
+    venue: "Hank's Texas Grill",
+    city: 'McKinney, TX',
+    date: '2026-09-12T20:30:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-love-and-war-in-texas-2026-09-27',
+    venue: 'Love and War in Texas',
+    city: 'Plano, TX',
+    date: '2026-09-27T19:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-magnolia-motor-lounge-2026-10-11',
+    venue: 'Magnolia Motor Lounge',
+    city: 'Fort Worth, TX',
+    date: '2026-10-11T21:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-the-rustic-2026-10-25',
+    venue: 'The Rustic',
+    city: 'Dallas, TX',
+    date: '2026-10-25T20:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-barn-baloon-2026-06-21',
+    venue: 'Barn Baloon',
+    city: 'Private Event',
+    date: '2026-06-21T12:00:00-05:00',
+    status: 'past',
+    recapUrl: '/media',
+  },
+  {
+    _id: 'show-lexus-box-garden-2026-05-30',
+    venue: 'Lexus Box Garden',
+    city: 'Frisco, TX',
+    date: '2026-05-30T12:00:00-05:00',
+    status: 'past',
+    recapUrl: '/media',
+  },
+  {
+    _id: 'show-north-texas-whiskey-fest-2026-04-18',
+    venue: 'North Texas Whiskey Fest',
+    city: 'Denton, TX',
+    date: '2026-04-18T12:00:00-05:00',
+    status: 'past',
+    recapUrl: '/media',
+  },
+  {
+    _id: 'show-gas-monkey-bar-n-grill-2026-03-08',
+    venue: 'Gas Monkey Bar N Grill',
+    city: 'Dallas, TX',
+    date: '2026-03-08T12:00:00-05:00',
+    status: 'past',
+    recapUrl: '/media',
+  },
+];
+
+function mapShow(s: RawShow) {
+  const status = s.status || deriveStatus(s.date);
+  const formatted = formatShowDate(s.date);
+  const isUpcoming = status === 'upcoming';
+
+  return {
+    ...s,
+    ...formatted,
+    status,
+    maps: buildMapsUrl(s.venue, s.city),
+    cal: buildCalendarUrl(s),
+    label: isUpcoming ? 'Tickets' : 'Recap',
+    href: isUpcoming ? (s.ticketUrl || '#') : (s.recapUrl || '/media'),
+    time: isUpcoming ? formatted.time : 'Past Show',
+  };
+}
+
+function toShowRow(s: ReturnType<typeof mapShow>): ShowRow {
+  return {
+    day: s.day,
+    mon: s.mon,
+    year: s.year,
+    venue: s.venue,
+    city: s.city,
+    time: s.time,
+    label: s.label,
+    href: s.href,
+    maps: s.maps,
+    cal: s.cal,
+  };
+}
+
+const projectId = import.meta.env.SANITY_PROJECT_ID ?? '';
+let rawShows: RawShow[] = MOCK_SHOWS;
+let featuredRaw: RawShow | null = MOCK_SHOWS.find((s) => s.isFeatured) ?? null;
+
+if (projectId) {
+  try {
+    const { sanityClient } = await import('../lib/sanity');
+    const { SHOWS_QUERY, FEATURED_SHOW_QUERY } = await import('../lib/queries');
+    const [fetchedShows, fetchedFeatured] = await Promise.all([
+      sanityClient.fetch<RawShow[]>(SHOWS_QUERY),
+      sanityClient.fetch<RawShow | null>(FEATURED_SHOW_QUERY),
+    ]);
+
+    if (Array.isArray(fetchedShows) && fetchedShows.length > 0) {
+      rawShows = fetchedShows;
+    }
+
+    featuredRaw =
+      fetchedFeatured ??
+      rawShows.find((s) => s.isFeatured) ??
+      rawShows.find((s) => (s.status || deriveStatus(s.date)) === 'upcoming') ??
+      null;
+  } catch {
+    // Fall back to mock data when Sanity is unreachable.
+  }
+}
+
+const shows = rawShows.map(mapShow);
+const upcoming = shows
+  .filter((s) => s.status === 'upcoming')
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+const past = shows
+  .filter((s) => s.status === 'past')
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+const upcomingRows = upcoming.map(toShowRow);
+const pastRows = past.map(toShowRow);
+
+const featured = featuredRaw ? mapShow(featuredRaw) : upcoming[0] ?? null;
+---
+
+<BaseLayout title="Shows | Texas, Whiskey & You">
+  <Nav current="shows" />
+
+  <section class="shows-header">
+    <div class="shows-header__bg"></div>
+    <div class="shows-header__overlay"></div>
+    <div class="shows-header__glow"></div>
+    <div class="shows-header__inner">
+      <div class="shows-header__eyebrow">
+        <span class="shows-header__star" aria-hidden="true">&#9733;</span>
+        <span class="shows-header__label">Tour Dates</span>
+      </div>
+      <h1 class="shows-header__title">Shows</h1>
+      <p class="shows-header__lead">
+        Catch Texas, Whiskey &amp; You live across North Texas. Grab your tickets, drop us on your calendar, and
+        we&rsquo;ll see you on the floor.
+      </p>
+    </div>
+  </section>
+
+  {
+    featured && (
+      <FeaturedShow
+        day={featured.day}
+        month={featured.mon}
+        year={featured.year}
+        time={featured.time}
+        venue={featured.venue}
+        city={featured.city}
+        ticketHref={featured.ticketUrl || '#'}
+        mapsHref={featured.maps}
+      />
+    )
+  }
+
+  <ShowList upcomingShows={upcomingRows} pastShows={pastRows}>
+    <div class="shows-cta">
+      <h3 class="shows-cta__title">Want Us At Your Event?</h3>
+      <p class="shows-cta__text">
+        Private parties, festivals, wineries and corporate gigs &mdash; let&rsquo;s get a date on the calendar.
+      </p>
+      <a href="/book" class="btn-primary shows-cta__btn">Book The Band</a>
+    </div>
+  </ShowList>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .shows-header {
+    position: relative;
+    padding: 170px 5vw 90px;
+    overflow: hidden;
+  }
+
+  .shows-header__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/bw-barn-band.jpg');
+    background-size: cover;
+    background-position: center 36%;
+  }
+
+  .shows-header__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.82), rgba(13, 13, 13, 0.92));
+  }
+
+  .shows-header__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 70% at 30% 30%, rgba(196, 122, 44, 0.16), transparent 70%);
+  }
+
+  .shows-header__inner {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .shows-header__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .shows-header__star {
+    color: var(--color-accent);
+  }
+
+  .shows-header__label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .shows-header__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(44px, 7vw, 92px);
+    line-height: 0.94;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .shows-header__lead {
+    font-family: var(--font-serif);
+    font-size: clamp(17px, 2vw, 23px);
+    color: var(--color-text);
+    opacity: 0.9;
+    max-width: 48ch;
+    margin: 22px 0 0;
+    line-height: 1.5;
+  }
+
+  .shows-cta {
+    margin-top: 70px;
+    padding: 54px 5vw;
+    background: linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-hover));
+    border: 1px solid rgba(196, 122, 44, 0.2);
+    border-radius: 5px;
+    text-align: center;
+  }
+
+  .shows-cta__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 3.4vw, 40px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 14px;
+  }
+
+  .shows-cta__text {
+    color: var(--color-text-muted);
+    font-size: 16px;
+    max-width: 52ch;
+    margin: 0 auto 28px;
+    line-height: 1.6;
+  }
+
+  .shows-cta__btn {
+    display: inline-block;
+  }
+</style>
