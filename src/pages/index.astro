@@ -2,31 +2,1096 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import ShowCard from '../components/ShowCard.astro';
+import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus } from '../lib/shows';
 
-const title = 'Texas, Whiskey & You';
+interface RawShow {
+  _id: string;
+  venue: string;
+  city: string;
+  date: string;
+  ticketUrl?: string;
+  isFeatured?: boolean;
+  status?: 'upcoming' | 'past';
+  recapUrl?: string;
+}
+
+interface GalleryItem {
+  imageUrl: string;
+  alt: string;
+}
+
+interface VideoItem {
+  youtubeId?: string;
+  title?: string;
+  posterUrl?: string;
+}
+
+const MOCK_SHOWS: RawShow[] = [
+  {
+    _id: 'show-lava-cantina-2026-08-15',
+    venue: 'Lava Cantina',
+    city: 'The Colony, TX',
+    date: '2026-08-15T20:00:00-05:00',
+    status: 'upcoming',
+    isFeatured: true,
+  },
+  {
+    _id: 'show-mavericks-dance-hall-2026-08-29',
+    venue: 'Mavericks Dance Hall',
+    city: 'Arlington, TX',
+    date: '2026-08-29T21:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-hanks-texas-grill-2026-09-12',
+    venue: "Hank's Texas Grill",
+    city: 'McKinney, TX',
+    date: '2026-09-12T20:30:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-love-and-war-in-texas-2026-09-27',
+    venue: 'Love and War in Texas',
+    city: 'Plano, TX',
+    date: '2026-09-27T19:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-magnolia-motor-lounge-2026-10-11',
+    venue: 'Magnolia Motor Lounge',
+    city: 'Fort Worth, TX',
+    date: '2026-10-11T21:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-the-rustic-2026-10-25',
+    venue: 'The Rustic',
+    city: 'Dallas, TX',
+    date: '2026-10-25T20:00:00-05:00',
+    status: 'upcoming',
+  },
+  {
+    _id: 'show-barn-baloon-2026-06-21',
+    venue: 'Barn Baloon',
+    city: 'Private Event',
+    date: '2026-06-21T12:00:00-05:00',
+    status: 'past',
+    recapUrl: '/media',
+  },
+  {
+    _id: 'show-lexus-box-garden-2026-05-30',
+    venue: 'Lexus Box Garden',
+    city: 'Frisco, TX',
+    date: '2026-05-30T12:00:00-05:00',
+    status: 'past',
+    recapUrl: '/media',
+  },
+  {
+    _id: 'show-north-texas-whiskey-fest-2026-04-18',
+    venue: 'North Texas Whiskey Fest',
+    city: 'Denton, TX',
+    date: '2026-04-18T12:00:00-05:00',
+    status: 'past',
+    recapUrl: '/media',
+  },
+];
+
+const MOCK_GALLERY: GalleryItem[] = [
+  { imageUrl: '/assets/vocal-green.jpg', alt: 'Lead vocals under stage lights' },
+  { imageUrl: '/assets/bw-duo.jpg', alt: 'Two members performing' },
+  { imageUrl: '/assets/longhorn-sign.jpg', alt: 'Texas Whiskey and You stage backdrop' },
+  { imageUrl: '/assets/bw-guitar-case.jpg', alt: 'Guitar in case backstage' },
+  { imageUrl: '/assets/band-barn-group.jpg', alt: 'The band together' },
+  { imageUrl: '/assets/bw-pedals.jpg', alt: 'Setting the stage' },
+];
+
+const DEFAULT_YOUTUBE_ID = 'ZUz16UbeLPU';
+const DEFAULT_VIDEO_POSTER = '/assets/twy-live1.jpg';
+
+const TICKER_ITEMS = [
+  'Festivals',
+  'Dance Halls',
+  'Wineries',
+  'Corporate Events',
+  'Private Parties',
+  'Music Venues',
+];
+
+function mapShow(s: RawShow) {
+  const status = s.status || deriveStatus(s.date);
+  const formatted = formatShowDate(s.date);
+  const isUpcoming = status === 'upcoming';
+
+  return {
+    ...s,
+    ...formatted,
+    status,
+    maps: buildMapsUrl(s.venue, s.city),
+    cal: buildCalendarUrl(s),
+    label: isUpcoming ? 'Tickets' : 'Recap',
+    href: isUpcoming ? (s.ticketUrl || '#') : (s.recapUrl || '/media'),
+    time: isUpcoming ? formatted.time : 'Past Show',
+  };
+}
+
+const projectId = import.meta.env.SANITY_PROJECT_ID ?? '';
+let rawShows: RawShow[] = MOCK_SHOWS;
+let galleryItems: GalleryItem[] = MOCK_GALLERY;
+let featuredVideo: VideoItem = {
+  youtubeId: DEFAULT_YOUTUBE_ID,
+  title: 'Texas, Whiskey & You live',
+  posterUrl: DEFAULT_VIDEO_POSTER,
+};
+
+if (projectId) {
+  try {
+    const { sanityClient } = await import('../lib/sanity');
+    const { SHOWS_QUERY, GALLERY_QUERY, VIDEOS_QUERY } = await import('../lib/queries');
+    const [fetchedShows, fetchedGallery, fetchedVideos] = await Promise.all([
+      sanityClient.fetch<RawShow[]>(SHOWS_QUERY),
+      sanityClient.fetch<GalleryItem[]>(GALLERY_QUERY),
+      sanityClient.fetch<VideoItem[]>(VIDEOS_QUERY),
+    ]);
+
+    if (Array.isArray(fetchedShows) && fetchedShows.length > 0) {
+      rawShows = fetchedShows;
+    }
+
+    if (Array.isArray(fetchedGallery) && fetchedGallery.length > 0) {
+      galleryItems = fetchedGallery.slice(0, 6).map((item) => ({
+        imageUrl: item.imageUrl,
+        alt: item.alt || 'Gallery photo',
+      }));
+    }
+
+    const videoWithId = fetchedVideos?.find((v) => v.youtubeId?.trim());
+    if (videoWithId?.youtubeId) {
+      featuredVideo = {
+        youtubeId: videoWithId.youtubeId.trim(),
+        title: videoWithId.title || 'Texas, Whiskey & You live',
+        posterUrl: videoWithId.posterUrl || DEFAULT_VIDEO_POSTER,
+      };
+    }
+  } catch {
+    // Fall back to mock data when Sanity is unreachable.
+  }
+}
+
+const shows = rawShows.map(mapShow);
+const upcomingShows = shows
+  .filter((s) => s.status === 'upcoming')
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  .slice(0, 5);
+const pastShows = shows
+  .filter((s) => s.status === 'past')
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 5);
+
+const videoPoster = featuredVideo.posterUrl || DEFAULT_VIDEO_POSTER;
+const videoTitle = featuredVideo.title || 'Texas, Whiskey & You live';
+const youtubeId = featuredVideo.youtubeId || DEFAULT_YOUTUBE_ID;
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title="Texas, Whiskey & You">
   <Nav current="home" />
-  <main class="page-main">
-    <h1 class="section-title">Texas, Whiskey &amp; You</h1>
-    <p class="page-lead">North Texas&rsquo;s premier Chris Stapleton tribute experience.</p>
-  </main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__parallax" data-parallax="0.18"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__glow"></div>
+    <div class="hero__inner">
+      <div class="hero__eyebrow">
+        <span class="hero__star" aria-hidden="true">&#9733;</span>
+        <span class="hero__label">North Texas &middot; Live Concert Experience</span>
+        <span class="hero__star" aria-hidden="true">&#9733;</span>
+      </div>
+      <h1 class="hero__title">
+        <span class="hero__title-line">Texas&rsquo; Premier</span>
+        <span class="hero__title-line hero__title-line--accent">Chris Stapleton</span>
+        <span class="hero__title-line">Tribute Experience</span>
+      </h1>
+      <p class="hero__lead">
+        The soul. The grit. The songs. A live concert experience celebrating the music of Chris Stapleton.
+      </p>
+      <div class="hero__actions">
+        <a href="/shows" class="btn-primary hero__btn-primary">View Upcoming Shows &rarr;</a>
+        <a href="/book" class="btn-secondary hero__btn-secondary">Book The Band</a>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true">
+      <span class="hero__scroll-label">Scroll</span>
+      <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="#C47A2C" stroke-width="2">
+        <path d="M8 2 V20 M2 14 l6 6 6-6"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Ticker -->
+  <section class="ticker">
+    <div class="ticker__mask">
+      <div class="ticker__track">
+        <div class="ticker__group">
+          {
+            TICKER_ITEMS.map((item) => (
+              <>
+                <span class="ticker__item">{item}</span>
+                <span class="ticker__star" aria-hidden="true">&#9733;</span>
+              </>
+            ))
+          }
+        </div>
+        <div class="ticker__group" aria-hidden="true">
+          {
+            TICKER_ITEMS.map((item) => (
+              <>
+                <span class="ticker__item">{item}</span>
+                <span class="ticker__star" aria-hidden="true">&#9733;</span>
+              </>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Shows -->
+  <section class="home-shows" data-show-list-root>
+    <div class="home-shows__inner">
+      <div class="home-shows__header">
+        <div>
+          <div class="section-label home-shows__eyebrow">On The Road</div>
+          <h2 class="section-title">Upcoming Shows</h2>
+        </div>
+        <div class="show-list__toggle" role="group" aria-label="Show filter">
+          <button
+            type="button"
+            class="show-list__toggle-btn show-list__toggle-btn--active"
+            data-show-filter="upcoming"
+          >
+            Upcoming
+          </button>
+          <button type="button" class="show-list__toggle-btn" data-show-filter="past">
+            Past Shows
+          </button>
+        </div>
+      </div>
+
+      <div class="home-shows__panel" data-show-panel="upcoming">
+        {
+          upcomingShows.map((show) => (
+            <ShowCard
+              day={show.day}
+              mon={show.mon}
+              year={show.year}
+              venue={show.venue}
+              city={show.city}
+              time={show.time}
+              label={show.label}
+              href={show.href}
+              maps={show.maps}
+              cal={show.cal}
+              isUpcoming={true}
+            />
+          ))
+        }
+      </div>
+      <div class="home-shows__panel" data-show-panel="past" hidden>
+        {
+          pastShows.map((show) => (
+            <ShowCard
+              day={show.day}
+              mon={show.mon}
+              year={show.year}
+              venue={show.venue}
+              city={show.city}
+              time={show.time}
+              label={show.label}
+              href={show.href}
+              maps={show.maps}
+              cal={show.cal}
+              isUpcoming={false}
+            />
+          ))
+        }
+      </div>
+
+      <div class="home-shows__footer">
+        <a href="/shows" class="home-shows__link">See All Tour Dates &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Video -->
+  <section class="home-video">
+    <div class="home-video__inner">
+      <div class="section-label home-video__eyebrow">Press Play</div>
+      <h2 class="section-title home-video__title">See The Experience</h2>
+      <p class="home-video__lead">
+        Texas, Whiskey &amp; You recreates the unmistakable sound, energy, and emotion that made Chris Stapleton
+        one of the most respected voices in modern country music.
+      </p>
+
+      <div
+        class="home-video__player"
+        data-video-player
+        data-youtube-id={youtubeId}
+        data-video-title={videoTitle}
+      >
+        <button type="button" class="home-video__poster" data-video-poster aria-label="Play featured video">
+          <img
+            src={videoPoster}
+            alt=""
+            class="home-video__poster-img"
+            loading="lazy"
+          />
+          <div class="home-video__poster-overlay"></div>
+          <div class="home-video__poster-content">
+            <div class="home-video__play-btn" aria-hidden="true">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="#0D0D0D">
+                <path d="M8 5v14l11-7z"></path>
+              </svg>
+            </div>
+            <div class="home-video__play-label">Watch The Reel</div>
+          </div>
+        </button>
+        <div class="home-video__embed" data-video-embed hidden></div>
+      </div>
+
+      <div class="home-video__footer">
+        <a href="/media" class="home-video__more">Watch More Videos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Experience -->
+  <section class="experience">
+    <div class="experience__inner">
+      <div class="experience__header">
+        <div class="section-label">Why It Hits</div>
+        <h2 class="section-title">The Experience</h2>
+      </div>
+      <div class="experience__grid">
+        <article class="experience__card">
+          <div class="experience__icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" stroke-linecap="round">
+              <path d="M3 12h3l2-6 4 12 2-9 2 4h5"></path>
+            </svg>
+          </div>
+          <h3 class="experience__card-title">Authentic Sound</h3>
+          <p class="experience__card-text">
+            Professional musicians recreating Stapleton&rsquo;s signature tone, phrasing, and that unmistakable
+            gravel-and-soul vocal.
+          </p>
+        </article>
+        <article class="experience__card">
+          <div class="experience__icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M13 2 L4 14 h6 l-1 8 9-12 h-6 z"></path>
+            </svg>
+          </div>
+          <h3 class="experience__card-title">Live Energy</h3>
+          <p class="experience__card-text">
+            Crowd-driven performances that keep the dance floor packed and the room moving from the first note to
+            the last call.
+          </p>
+        </article>
+        <article class="experience__card">
+          <div class="experience__icon" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" stroke-linejoin="round">
+              <path d="M12 3 l2.6 5.7 6.2 .6 -4.7 4.1 1.4 6.1 -5.5 -3.2 -5.5 3.2 1.4 -6.1 -4.7 -4.1 6.2 -.6 z"></path>
+            </svg>
+          </div>
+          <h3 class="experience__card-title">Perfect For Any Event</h3>
+          <p class="experience__card-text">
+            Festivals, wineries, music venues, corporate events, and private celebrations &mdash; scaled and tuned to
+            your room.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Preview -->
+  <section class="gallery-preview">
+    <div class="gallery-preview__inner">
+      <div class="gallery-preview__header">
+        <div>
+          <div class="section-label gallery-preview__eyebrow">In The Room</div>
+          <h2 class="section-title">Gallery</h2>
+        </div>
+        <a href="/media" class="gallery-preview__link">View Full Gallery &rarr;</a>
+      </div>
+      <div class="gallery-preview__grid">
+        {
+          galleryItems.map((item) => (
+            <div class="gallery-preview__item" data-zoom>
+              <img
+                src={item.imageUrl}
+                alt={item.alt}
+                class="gallery-preview__img"
+                loading="lazy"
+                data-zoom-img
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="home-cta">
+    <div class="home-cta__bg"></div>
+    <div class="home-cta__overlay"></div>
+    <div class="home-cta__glow"></div>
+    <div class="home-cta__inner">
+      <div class="home-cta__eyebrow">
+        <span aria-hidden="true">&#9733;</span>
+        <span class="home-cta__label">Now Booking</span>
+        <span aria-hidden="true">&#9733;</span>
+      </div>
+      <h2 class="home-cta__title">Bring The Experience To Your Venue</h2>
+      <p class="home-cta__lead">
+        Now booking festivals, venues, wineries, corporate events, and private parties across North Texas and beyond.
+      </p>
+      <div class="home-cta__actions">
+        <a href="/book" class="btn-primary">Book Now</a>
+        <a href="/contact" class="btn-secondary">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
   <Footer />
 </BaseLayout>
 
+<script src="../scripts/parallax.ts"></script>
+<script src="../scripts/show-filter.ts"></script>
+<script src="../scripts/video-player.ts"></script>
+
 <style>
-  .page-main {
-    min-height: 60vh;
-    padding: 120px 5vw 80px;
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero__parallax {
+    position: absolute;
+    top: -8%;
+    left: 0;
+    width: 100%;
+    height: 116%;
+    background-image: url('/assets/live-crowd.jpg');
+    background-size: cover;
+    background-position: center 62%;
+    will-change: transform;
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(13, 13, 13, 0.96) 0%,
+      rgba(13, 13, 13, 0.82) 46%,
+      rgba(13, 13, 13, 0.48) 100%
+    );
+  }
+
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(0deg, #0d0d0d 2%, rgba(13, 13, 13, 0) 38%),
+      radial-gradient(70% 50% at 20% 30%, rgba(196, 122, 44, 0.2), transparent 70%);
+  }
+
+  .hero__inner {
+    position: relative;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 120px 5vw 90px;
+  }
+
+  .hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 26px;
+  }
+
+  .hero__star {
+    color: var(--color-accent);
+    font-size: 14px;
+  }
+
+  .hero__label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .hero__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(38px, 5.6vw, 74px);
+    line-height: 0.95;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--color-text);
+    text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .hero__title-line {
+    display: block;
+  }
+
+  .hero__title-line--accent {
+    color: var(--color-accent-light);
+  }
+
+  .hero__lead {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(18px, 2.2vw, 26px);
+    line-height: 1.5;
+    color: var(--color-text);
+    max-width: 46ch;
+    margin: 30px 0 0;
+    opacity: 0.92;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 42px;
+  }
+
+  .hero__btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    padding: 18px 34px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .hero__btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 44px rgba(196, 122, 44, 0.55);
+  }
+
+  .hero__btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    padding: 18px 34px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .hero__btn-secondary:hover {
+    background: rgba(244, 233, 216, 0.12);
+    border-color: var(--color-text);
+  }
+
+  .hero__scroll {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: twyFloat 2.4s ease-in-out infinite;
+  }
+
+  .hero__scroll-label {
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .ticker {
+    position: relative;
+    padding: 46px 5vw;
+    background: var(--color-bg-elevated);
+    border-top: 1px solid rgba(196, 122, 44, 0.16);
+  }
+
+  .ticker__mask {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  .ticker__track {
+    display: flex;
+    width: max-content;
+    animation: twyMarquee 26s linear infinite;
+    gap: 0;
+  }
+
+  .ticker__group {
+    display: flex;
+    gap: 0;
+    flex: none;
+  }
+
+  .ticker__item {
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-dim);
+    padding: 0 32px;
+  }
+
+  .ticker__star {
+    color: var(--color-accent);
+    align-self: center;
+  }
+
+  .home-shows {
+    padding: 100px 5vw;
+    background: var(--color-bg);
+  }
+
+  .home-shows__inner {
     max-width: 1200px;
     margin: 0 auto;
   }
 
-  .page-lead {
+  .home-shows__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 46px;
+  }
+
+  .home-shows__eyebrow {
+    margin-bottom: 14px;
+  }
+
+  .home-shows :global(.show-list__toggle) {
+    display: inline-flex;
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.12);
+    border-radius: 3px;
+    padding: 4px;
+  }
+
+  .home-shows :global(.show-list__toggle-btn) {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
     color: var(--color-text-muted);
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .home-shows :global(.show-list__toggle-btn--active) {
+    color: var(--color-bg);
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+  }
+
+  .home-shows__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .home-shows__panel[hidden] {
+    display: none;
+  }
+
+  .home-shows__footer {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .home-shows__link {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196, 122, 44, 0.4);
+    padding-bottom: 4px;
+  }
+
+  .home-video {
+    padding: 100px 5vw;
+    background: linear-gradient(180deg, var(--color-bg), var(--color-bg-elevated));
+  }
+
+  .home-video__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .home-video__eyebrow {
+    margin-bottom: 16px;
+  }
+
+  .home-video__title {
+    margin-bottom: 18px;
+  }
+
+  .home-video__lead {
+    color: var(--color-text-muted);
+    font-size: 17px;
+    line-height: 1.7;
+    max-width: 62ch;
+    margin: 0 auto 44px;
+  }
+
+  .home-video__player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(196, 122, 44, 0.3);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  }
+
+  .home-video__poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    background: none;
+  }
+
+  .home-video__poster-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .home-video__poster:hover .home-video__poster-img {
+    transform: scale(1.07);
+  }
+
+  .home-video__poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 60% at 50% 50%, rgba(13, 13, 13, 0.2), rgba(13, 13, 13, 0.72));
+  }
+
+  .home-video__poster-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .home-video__play-btn {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px rgba(196, 122, 44, 0.5);
+  }
+
+  .home-video__play-label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  .home-video__embed {
+    position: absolute;
+    inset: 0;
+  }
+
+  .home-video__embed[hidden] {
+    display: none;
+  }
+
+  .home-video__footer {
+    margin-top: 36px;
+  }
+
+  .home-video__more {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1.5px solid rgba(244, 233, 216, 0.35);
+    padding: 15px 32px;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+
+  .home-video__more:hover {
+    background: rgba(244, 233, 216, 0.1);
+  }
+
+  .experience {
+    padding: 100px 5vw;
+    background: var(--color-bg-elevated);
+  }
+
+  .experience__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .experience__header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .experience__header .section-label {
+    margin-bottom: 16px;
+  }
+
+  .experience__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .experience__card {
+    background: var(--color-bg);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+    border-radius: 4px;
+    padding: 42px 34px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  .experience__card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(196, 122, 44, 0.4);
+  }
+
+  .experience__icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(196, 122, 44, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 26px;
+  }
+
+  .experience__card-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 24px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 14px;
+  }
+
+  .experience__card-text {
+    color: var(--color-text-muted);
+    font-size: 15.5px;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .gallery-preview {
+    padding: 100px 5vw;
+    background: var(--color-bg);
+  }
+
+  .gallery-preview__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .gallery-preview__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 44px;
+  }
+
+  .gallery-preview__eyebrow {
+    margin-bottom: 14px;
+  }
+
+  .gallery-preview__link {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196, 122, 44, 0.4);
+    padding-bottom: 4px;
+  }
+
+  .gallery-preview__grid {
+    columns: 3;
+    column-gap: 16px;
+  }
+
+  .gallery-preview__item {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    overflow: hidden;
+    border-radius: 3px;
+  }
+
+  .gallery-preview__img {
+    width: 100%;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  .gallery-preview__item:hover .gallery-preview__img {
+    transform: scale(1.07);
+  }
+
+  .home-cta {
+    position: relative;
+    padding: 120px 5vw;
+    overflow: hidden;
+  }
+
+  .home-cta__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/vocal-green.jpg');
+    background-size: cover;
+    background-position: center 30%;
+  }
+
+  .home-cta__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.86), rgba(13, 13, 13, 0.92));
+  }
+
+  .home-cta__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 60% at 50% 40%, rgba(196, 122, 44, 0.22), transparent 70%);
+  }
+
+  .home-cta__inner {
+    position: relative;
+    max-width: 840px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .home-cta__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    color: var(--color-accent);
+  }
+
+  .home-cta__label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .home-cta__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(38px, 6vw, 76px);
+    line-height: 0.94;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--color-text);
+    text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .home-cta__lead {
+    color: var(--color-text);
+    opacity: 0.86;
     font-size: 18px;
-    line-height: 1.6;
-    margin-top: 16px;
+    line-height: 1.7;
+    max-width: 60ch;
+    margin: 26px auto 42px;
+  }
+
+  .home-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .home-cta__actions .btn-primary {
+    font-size: 16px;
+    padding: 18px 38px;
+  }
+
+  .home-cta__actions .btn-secondary {
+    font-size: 16px;
+    padding: 18px 38px;
+  }
+
+  @media (max-width: 900px) {
+    .experience__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery-preview__grid {
+      columns: 2;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .gallery-preview__grid {
+      columns: 1;
+    }
   }
 </style>
