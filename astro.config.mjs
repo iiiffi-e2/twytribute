@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
+  site: 'https://twytribute.com',
   // output will change to 'server' or 'hybrid' before Task 14 API routes
   output: 'static',
   adapter: vercel({ webAnalytics: false }),
