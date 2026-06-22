@@ -1,0 +1,141 @@
+---
+import ShowCard from './ShowCard.astro';
+
+export interface ShowRow {
+  day: string;
+  mon: string;
+  year: string;
+  venue: string;
+  city: string;
+  time: string;
+  label: string;
+  href: string;
+  maps: string;
+  cal: string;
+}
+
+interface Props {
+  upcomingShows?: ShowRow[];
+  pastShows?: ShowRow[];
+}
+
+const { upcomingShows = [], pastShows = [] } = Astro.props;
+const hasUpcomingSlot = Astro.slots.has('upcoming');
+const hasPastSlot = Astro.slots.has('past');
+---
+
+<section class="show-list" data-show-list-root>
+  <div class="show-list__inner">
+    <div class="show-list__header">
+      <h2 class="show-list__heading" data-show-heading>All Upcoming Dates</h2>
+      <div class="show-list__toggle" role="group" aria-label="Show filter">
+        <button
+          type="button"
+          class="show-list__toggle-btn show-list__toggle-btn--active"
+          data-show-filter="upcoming"
+        >
+          Upcoming
+        </button>
+        <button type="button" class="show-list__toggle-btn" data-show-filter="past">
+          Past Shows
+        </button>
+      </div>
+    </div>
+
+    <div class="show-list__panels">
+      <div class="show-list__panel" data-show-panel="upcoming">
+        {
+          hasUpcomingSlot ? (
+            <slot name="upcoming" />
+          ) : (
+            upcomingShows.map((show) => (
+              <ShowCard {...show} isUpcoming={true} />
+            ))
+          )
+        }
+      </div>
+      <div class="show-list__panel" data-show-panel="past" hidden>
+        {
+          hasPastSlot ? (
+            <slot name="past" />
+          ) : (
+            pastShows.map((show) => (
+              <ShowCard {...show} isUpcoming={false} />
+            ))
+          )
+        }
+      </div>
+    </div>
+
+    <slot />
+  </div>
+</section>
+
+<script src="../scripts/show-filter.ts"></script>
+
+<style>
+  .show-list {
+    padding: 50px 5vw 100px;
+    background: var(--color-bg);
+  }
+
+  .show-list__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .show-list__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 34px;
+  }
+
+  .show-list__heading {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(26px, 3vw, 38px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .show-list__toggle {
+    display: inline-flex;
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.12);
+    border-radius: 3px;
+    padding: 4px;
+  }
+
+  .show-list__toggle-btn {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    color: var(--color-text-muted);
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .show-list__toggle-btn--active {
+    color: var(--color-bg);
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+  }
+
+  .show-list__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .show-list__panel[hidden] {
+    display: none;
+  }
+</style>

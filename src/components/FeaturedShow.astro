@@ -1,0 +1,214 @@
+---
+interface Props {
+  day: string;
+  month: string;
+  year: string;
+  time: string;
+  venue: string;
+  city: string;
+  ticketHref: string;
+  mapsHref: string;
+  imageSrc?: string;
+}
+
+const {
+  day,
+  month,
+  year,
+  time,
+  venue,
+  city,
+  ticketHref,
+  mapsHref,
+  imageSrc = '/assets/live-crowd.jpg',
+} = Astro.props;
+---
+
+<section class="featured-show">
+  <div class="featured-show__inner">
+    <div class="section-label featured-show__label">Next Up</div>
+    <div class="featured-show__card" data-featured>
+      <div class="featured-show__media" data-zoom>
+        <div class="featured-show__image" data-zoom-img style={`background-image: url('${imageSrc}')`}></div>
+        <div class="featured-show__media-overlay"></div>
+        <div class="featured-show__badge">Featured Show</div>
+      </div>
+      <div class="featured-show__content">
+        <div class="featured-show__date-row">
+          <span class="featured-show__day">{day}</span>
+          <div>
+            <div class="featured-show__month">{month}</div>
+            <div class="featured-show__year-time">{year} &middot; {time}</div>
+          </div>
+        </div>
+        <h2 class="featured-show__venue">{venue}</h2>
+        <div class="featured-show__location">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C47A2C" stroke-width="2" aria-hidden="true">
+            <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"></path>
+            <circle cx="12" cy="9" r="2.4"></circle>
+          </svg>
+          {city}
+        </div>
+        <div class="featured-show__actions">
+          <a href={ticketHref} class="btn-primary">Buy Tickets</a>
+          <a href={mapsHref} target="_blank" rel="noopener" class="featured-show__directions">Directions</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-show {
+    padding: 80px 5vw 40px;
+    background: var(--color-bg);
+  }
+
+  .featured-show__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .featured-show__label {
+    letter-spacing: 0.3em;
+    margin-bottom: 24px;
+  }
+
+  .featured-show__card {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 0;
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(196, 122, 44, 0.28);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .featured-show__media {
+    position: relative;
+    min-height: 380px;
+    overflow: hidden;
+  }
+
+  .featured-show__image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s ease;
+  }
+
+  [data-zoom]:hover [data-zoom-img] {
+    transform: scale(1.06);
+  }
+
+  .featured-show__media-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(22, 22, 22, 0.4));
+  }
+
+  .featured-show__badge {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    background: rgba(13, 13, 13, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(196, 122, 44, 0.4);
+    border-radius: 3px;
+    padding: 8px 16px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+  }
+
+  .featured-show__content {
+    padding: 48px 46px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .featured-show__date-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .featured-show__day {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 54px;
+    line-height: 1;
+    color: var(--color-accent-light);
+  }
+
+  .featured-show__month {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  .featured-show__year-time {
+    color: var(--color-text-dim);
+    font-size: 14px;
+  }
+
+  .featured-show__venue {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 3.4vw, 42px);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 14px 0 10px;
+  }
+
+  .featured-show__location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-text-muted);
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  .featured-show__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .featured-show__directions {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    border: 1.5px solid rgba(244, 233, 216, 0.35);
+    padding: 16px 28px;
+    border-radius: 2px;
+    text-decoration: none;
+  }
+
+  @media (max-width: 900px) {
+    .featured-show__card {
+      grid-template-columns: 1fr;
+    }
+
+    .featured-show__media {
+      min-height: 280px;
+    }
+
+    .featured-show__content {
+      padding: 36px 28px;
+    }
+  }
+</style>
