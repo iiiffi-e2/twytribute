@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    { "source": "/Home.dc.html", "destination": "/", "permanent": true },
+    { "source": "/Shows.dc.html", "destination": "/shows", "permanent": true },
+    { "source": "/Media.dc.html", "destination": "/media", "permanent": true },
+    { "source": "/Book.dc.html", "destination": "/book", "permanent": true },
+    { "source": "/Band.dc.html", "destination": "/band", "permanent": true },
+    { "source": "/Contact.dc.html", "destination": "/contact", "permanent": true }
+  ]
+}
