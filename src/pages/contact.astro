@@ -1,0 +1,380 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ContactForm from '../components/ContactForm.astro';
+
+const INSTAGRAM_FEED = [
+  '/assets/live-crowd.jpg',
+  '/assets/vocal-green.jpg',
+  '/assets/bw-duo.jpg',
+  '/assets/band-barn-group.jpg',
+  '/assets/longhorn-sign.jpg',
+  '/assets/bw-guitar-case.jpg',
+];
+---
+
+<BaseLayout
+  title="Contact | Texas, Whiskey & You"
+  description="Get in touch with Texas, Whiskey & You — booking inquiries, questions, or just say howdy."
+>
+  <Nav current="contact" />
+
+  <section class="contact-hero">
+    <div class="contact-hero__bg"></div>
+    <div class="contact-hero__overlay"></div>
+    <div class="contact-hero__inner">
+      <div class="contact-hero__eyebrow">
+        <span class="contact-hero__star" aria-hidden="true">&#9733;</span>
+        <span class="contact-hero__label">Get In Touch</span>
+      </div>
+      <h1 class="contact-hero__title">Contact</h1>
+      <p class="contact-hero__subtitle">
+        Booking a show, asking a question, or just want to say howdy? We&rsquo;d love to hear from you.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact-main">
+    <div class="contact-main__grid">
+      <div class="contact-info">
+        <div class="section-label contact-info__label">Reach Us</div>
+
+        <a href="mailto:sdmbooking@yahoo.com" class="contact-info__card">
+          <span class="contact-info__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2">
+              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+              <path d="M3 7l9 6 9-6"></path>
+            </svg>
+          </span>
+          <span>
+            <span class="contact-info__card-label">Booking Email</span>
+            <span class="contact-info__card-value">sdmbooking@yahoo.com</span>
+          </span>
+        </a>
+
+        <a
+          href="https://www.instagram.com/texaswhiskeyandyou"
+          target="_blank"
+          rel="noopener"
+          class="contact-info__card"
+        >
+          <span class="contact-info__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="1.2" fill="#D38B36" stroke="none"></circle>
+            </svg>
+          </span>
+          <span>
+            <span class="contact-info__card-label">Instagram</span>
+            <span class="contact-info__card-value">@texaswhiskeyandyou</span>
+          </span>
+        </a>
+
+        <div class="contact-info__card contact-info__card--static">
+          <span class="contact-info__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2">
+              <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"></path>
+              <circle cx="12" cy="9" r="2.4"></circle>
+            </svg>
+          </span>
+          <span>
+            <span class="contact-info__card-label">Based In</span>
+            <span class="contact-info__card-value">North Texas</span>
+          </span>
+        </div>
+
+        <div class="contact-info__promo">
+          <div class="contact-info__promo-title">Booking An Event?</div>
+          <p class="contact-info__promo-text">Use our full booking form for the fastest quote.</p>
+          <a href="/book" class="contact-info__promo-link">Go to Booking &rarr;</a>
+        </div>
+      </div>
+
+      <ContactForm />
+    </div>
+  </section>
+
+  <section class="contact-instagram">
+    <div class="contact-instagram__inner">
+      <div class="contact-instagram__header">
+        <div>
+          <div class="section-label">Follow Along</div>
+          <h2 class="contact-instagram__title">@texaswhiskeyandyou</h2>
+        </div>
+        <a
+          href="https://www.instagram.com/texaswhiskeyandyou"
+          target="_blank"
+          rel="noopener"
+          class="btn-primary contact-instagram__follow"
+        >
+          Follow
+        </a>
+      </div>
+      <div class="contact-instagram__grid">
+        {
+          INSTAGRAM_FEED.map((src) => (
+            <a
+              href="https://www.instagram.com/texaswhiskeyandyou"
+              target="_blank"
+              rel="noopener"
+              class="contact-instagram__item"
+              data-zoom
+            >
+              <img
+                src={src}
+                alt="Texas, Whiskey & You on Instagram"
+                class="contact-instagram__img"
+                data-zoom-img
+                loading="lazy"
+              />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .contact-hero {
+    position: relative;
+    padding: 170px 5vw 80px;
+    overflow: hidden;
+  }
+
+  .contact-hero__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/bw-pedals.jpg');
+    background-size: cover;
+    background-position: center 40%;
+  }
+
+  .contact-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.82), rgba(13, 13, 13, 0.95));
+  }
+
+  .contact-hero__inner {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .contact-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .contact-hero__star {
+    color: var(--color-accent);
+  }
+
+  .contact-hero__label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .contact-hero__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(44px, 7vw, 92px);
+    line-height: 0.94;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .contact-hero__subtitle {
+    font-family: var(--font-serif);
+    font-size: clamp(17px, 2vw, 23px);
+    color: var(--color-text);
+    opacity: 0.9;
+    max-width: 48ch;
+    margin: 22px 0 0;
+    line-height: 1.5;
+  }
+
+  .contact-main {
+    padding: 80px 5vw 90px;
+    background: var(--color-bg);
+  }
+
+  .contact-main__grid {
+    max-width: 1150px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .contact-info__label {
+    margin-bottom: 22px;
+  }
+
+  .contact-info__card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+    border-radius: 5px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-info__card:hover {
+    border-color: rgba(196, 122, 44, 0.5);
+  }
+
+  .contact-info__card--static {
+    cursor: default;
+  }
+
+  .contact-info__icon {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(196, 122, 44, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contact-info__card-label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .contact-info__card-value {
+    display: block;
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 3px;
+  }
+
+  .contact-info__promo {
+    margin-top: 30px;
+    padding: 26px;
+    background: linear-gradient(135deg, var(--color-bg-elevated), var(--color-bg-hover));
+    border: 1px solid rgba(196, 122, 44, 0.2);
+    border-radius: 5px;
+  }
+
+  .contact-info__promo-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+
+  .contact-info__promo-text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 16px;
+  }
+
+  .contact-info__promo-link {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196, 122, 44, 0.4);
+    padding-bottom: 3px;
+  }
+
+  .contact-instagram {
+    padding: 30px 5vw 96px;
+    background: var(--color-bg);
+  }
+
+  .contact-instagram__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .contact-instagram__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+
+  .contact-instagram__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(24px, 3vw, 40px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 10px 0 0;
+  }
+
+  .contact-instagram__follow {
+    font-size: 14px;
+    padding: 14px 28px;
+  }
+
+  .contact-instagram__grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+
+  .contact-instagram__item {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 3px;
+    display: block;
+  }
+
+  .contact-instagram__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  @media (max-width: 900px) {
+    .contact-main__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-instagram__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .contact-instagram__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

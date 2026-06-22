@@ -1,0 +1,161 @@
+<section class="contact-form" data-contact-form>
+  <div class="contact-form__success" data-contact-success hidden>
+    <div class="contact-form__success-icon" aria-hidden="true">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.5">
+        <path d="M5 12l4 4 10-10"></path>
+      </svg>
+    </div>
+    <h3 class="contact-form__success-title">Message Sent!</h3>
+    <p class="contact-form__success-text">
+      Thanks for reaching out &mdash; we&rsquo;ll get back to you soon.
+    </p>
+  </div>
+
+  <form class="contact-form__form" data-contact-form-el>
+    <div class="contact-form__fields">
+      <div class="contact-form__honeypot" aria-hidden="true">
+        <label for="contact-website">Website</label>
+        <input
+          id="contact-website"
+          class="twy-field"
+          type="text"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+        />
+      </div>
+
+      <div>
+        <label class="contact-form__label" for="contact-name">Name *</label>
+        <input
+          id="contact-name"
+          class="twy-field"
+          name="name"
+          type="text"
+          placeholder="Your name"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="contact-form__label" for="contact-email">Email *</label>
+        <input
+          id="contact-email"
+          class="twy-field"
+          name="email"
+          type="email"
+          placeholder="you@email.com"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="contact-form__label" for="contact-message">Message *</label>
+        <textarea
+          id="contact-message"
+          class="twy-field"
+          name="message"
+          rows="5"
+          placeholder="How can we help?"
+          required
+        ></textarea>
+      </div>
+
+      <div class="contact-form__error" data-contact-error hidden>
+        <p data-contact-error-msg>Something went wrong. Please try again.</p>
+      </div>
+
+      <button type="submit" class="btn-primary contact-form__submit">Send Message</button>
+    </div>
+  </form>
+</section>
+
+<script src="../scripts/contact-form.ts"></script>
+
+<style>
+  .contact-form__form,
+  .contact-form__success {
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+    border-radius: 6px;
+    padding: 40px 38px;
+  }
+
+  .contact-form__success {
+    border-color: rgba(196, 122, 44, 0.4);
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  .contact-form__success-icon {
+    display: inline-flex;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+
+  .contact-form__success-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 28px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 12px;
+  }
+
+  .contact-form__success-text {
+    color: var(--color-text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 42ch;
+    margin: 0 auto;
+  }
+
+  .contact-form__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .contact-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .contact-form__label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+  }
+
+  .contact-form__error {
+    background: rgba(180, 40, 40, 0.12);
+    border: 1px solid rgba(220, 80, 80, 0.35);
+    border-radius: 4px;
+    padding: 12px 16px;
+  }
+
+  .contact-form__error p {
+    margin: 0;
+    color: #e8a0a0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .contact-form__submit {
+    align-self: flex-start;
+    font-size: 16px;
+    padding: 17px 40px;
+  }
+</style>

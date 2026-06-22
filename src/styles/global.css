@@ -151,3 +151,36 @@ body {
   color: var(--color-text);
   margin: 0;
 }
+
+.twy-field {
+  width: 100%;
+  background: var(--color-bg);
+  border: 1px solid rgba(244, 233, 216, 0.14);
+  border-radius: 2px;
+  padding: 14px 16px;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  outline: none;
+}
+
+.twy-field::placeholder {
+  color: var(--color-text-dim);
+}
+
+.twy-field:focus {
+  border-color: var(--color-accent);
+  background: #1b1b1b;
+}
+
+textarea.twy-field {
+  resize: vertical;
+}
+
+.twy-field--date {
+  color-scheme: dark;
+}
+
+[data-zoom]:hover [data-zoom-img] {
+  transform: scale(1.08);
+}

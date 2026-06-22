@@ -1,0 +1,530 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import BookingForm from '../components/BookingForm.astro';
+
+const EVENT_TYPES = [
+  {
+    title: 'Festivals',
+    desc: 'High-energy sets that own the main stage.',
+    image: '/assets/live-crowd.jpg',
+  },
+  {
+    title: 'Music Venues',
+    desc: 'Dance halls, bars, and listening rooms.',
+    image: '/assets/twy-live1.jpg',
+  },
+  {
+    title: 'Corporate Events',
+    desc: 'Polished, professional, on time, on brand.',
+    image: '/assets/band-wall.jpg',
+  },
+  {
+    title: 'Private Parties',
+    desc: 'Weddings, birthdays, ranch & backyard.',
+    image: '/assets/band-barn-group.jpg',
+  },
+];
+
+const PROCESS_STEPS = [
+  {
+    num: '01',
+    title: 'Submit Inquiry',
+    text: 'Tell us the date, location, and vibe. The more detail, the faster we can quote.',
+  },
+  {
+    num: '02',
+    title: 'Confirm Details',
+    text: 'We lock the set length, sound & stage needs, and sign a simple agreement.',
+  },
+  {
+    num: '03',
+    title: 'Live Performance',
+    text: 'We show up early, dial it in, and give your crowd a night they\u2019ll talk about.',
+  },
+];
+---
+
+<BaseLayout
+  title="Book The Band | Texas, Whiskey & You"
+  description="Book Texas, Whiskey & You for festivals, venues, corporate events, and private parties across North Texas."
+>
+  <div class="book-page">
+    <Nav current="book" />
+
+    <section class="book-hero">
+      <div class="book-hero__bg"></div>
+      <div class="book-hero__overlay"></div>
+      <div class="book-hero__glow"></div>
+      <div class="book-hero__inner">
+        <div class="book-hero__eyebrow">
+          <span aria-hidden="true">&#9733;</span>
+          <span>Book The Band</span>
+          <span aria-hidden="true">&#9733;</span>
+        </div>
+        <h1 class="book-hero__title">Bring Chris Stapleton&rsquo;s Music To Your Event</h1>
+        <p class="book-hero__subtitle">
+          Professional live entertainment for festivals, venues, private events, and corporate gatherings.
+        </p>
+        <a href="#inquiry" class="btn-primary book-hero__cta">Start Your Inquiry &rarr;</a>
+      </div>
+    </section>
+
+    <section class="book-types">
+      <div class="book-types__inner">
+        <div class="book-types__header">
+          <div class="section-label">We Play Everywhere</div>
+          <h2 class="section-title">Event Types</h2>
+        </div>
+        <div class="book-types__grid">
+          {
+            EVENT_TYPES.map((type) => (
+              <div class="book-type-card" data-zoom>
+                <div
+                  class="book-type-card__bg"
+                  style={`background-image: url('${type.image}')`}
+                  data-zoom-img
+                />
+                <div class="book-type-card__overlay" />
+                <div class="book-type-card__content">
+                  <div class="book-type-card__title">{type.title}</div>
+                  <div class="book-type-card__desc">{type.desc}</div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="book-why">
+      <div class="book-why__inner">
+        <div class="book-why__header">
+          <div class="section-label">The Real Deal</div>
+          <h2 class="section-title">Why Book Us</h2>
+        </div>
+        <div class="book-why__grid">
+          <div class="book-stat">
+            <div class="book-stat__value">200+</div>
+            <div class="book-stat__label">Live Performances</div>
+          </div>
+          <div class="book-stat">
+            <div class="book-stat__value">100%</div>
+            <div class="book-stat__label">Professional Sound</div>
+          </div>
+          <div class="book-stat">
+            <div class="book-stat__icon" aria-hidden="true">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2">
+                <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"></path>
+                <path d="M9 12l2 2 4-4"></path>
+              </svg>
+            </div>
+            <div class="book-stat__label">Fully Insured</div>
+          </div>
+          <div class="book-stat">
+            <div class="book-stat__icon" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2">
+                <path d="M4 7h16M4 12h16M4 17h10"></path>
+              </svg>
+            </div>
+            <div class="book-stat__label">Flexible Formats</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="book-process">
+      <div class="book-process__inner">
+        <div class="book-process__header">
+          <div class="section-label">Simple &amp; Fast</div>
+          <h2 class="section-title">How It Works</h2>
+        </div>
+        <div class="book-process__grid">
+          {
+            PROCESS_STEPS.map((step) => (
+              <div class="book-process__step">
+                <div class="book-process__num">{step.num}</div>
+                <h3 class="book-process__title">{step.title}</h3>
+                <p class="book-process__text">{step.text}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section id="inquiry" class="book-inquiry">
+      <div class="book-inquiry__inner">
+        <div class="book-inquiry__header">
+          <div class="section-label">Let&rsquo;s Talk Dates</div>
+          <h2 class="section-title">Booking Inquiry</h2>
+        </div>
+        <BookingForm />
+      </div>
+    </section>
+
+    <Footer />
+  </div>
+
+  <div class="book-sticky-cta">
+    <div class="book-sticky-cta__inner">
+      <div class="book-sticky-cta__text">
+        <span class="book-sticky-cta__star" aria-hidden="true">&#9733;</span>
+        <span>Ready to book Texas, Whiskey &amp; You?</span>
+      </div>
+      <a href="#inquiry" class="btn-primary book-sticky-cta__btn">Get A Quote</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .book-page {
+    background: var(--color-bg);
+    padding-bottom: 64px;
+  }
+
+  .book-hero {
+    position: relative;
+    padding: 175px 5vw 95px;
+    overflow: hidden;
+  }
+
+  .book-hero__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/live-crowd.jpg');
+    background-size: cover;
+    background-position: center 55%;
+  }
+
+  .book-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(13, 13, 13, 0.9) 10%,
+      rgba(13, 13, 13, 0.8) 60%,
+      rgba(13, 13, 13, 0.95)
+    );
+  }
+
+  .book-hero__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 60% at 50% 35%, rgba(196, 122, 44, 0.18), transparent 70%);
+  }
+
+  .book-hero__inner {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .book-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .book-hero__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(38px, 5.6vw, 76px);
+    line-height: 0.96;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--color-text);
+    text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .book-hero__subtitle {
+    font-family: var(--font-serif);
+    font-size: clamp(17px, 2.1vw, 24px);
+    color: var(--color-text);
+    opacity: 0.92;
+    max-width: 54ch;
+    margin: 26px auto 38px;
+    line-height: 1.5;
+  }
+
+  .book-hero__cta {
+    display: inline-block;
+    font-size: 16px;
+    padding: 18px 40px;
+    box-shadow: 0 10px 34px rgba(196, 122, 44, 0.45);
+  }
+
+  .book-types {
+    padding: 96px 5vw;
+    background: var(--color-bg);
+  }
+
+  .book-types__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .book-types__header {
+    text-align: center;
+    margin-bottom: 54px;
+  }
+
+  .book-types__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .book-type-card {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(244, 233, 216, 0.08);
+  }
+
+  .book-type-card__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s ease;
+  }
+
+  .book-type-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.1), rgba(13, 13, 13, 0.9));
+  }
+
+  .book-type-card__content {
+    position: absolute;
+    left: 22px;
+    bottom: 22px;
+    right: 22px;
+  }
+
+  .book-type-card__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 23px;
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  .book-type-card__desc {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .book-why {
+    padding: 90px 5vw;
+    background: var(--color-bg-elevated);
+    border-top: 1px solid rgba(196, 122, 44, 0.14);
+    border-bottom: 1px solid rgba(196, 122, 44, 0.14);
+  }
+
+  .book-why__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .book-why__header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .book-why__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .book-stat {
+    background: var(--color-bg);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+    border-radius: 4px;
+    padding: 34px 26px;
+    text-align: center;
+  }
+
+  .book-stat__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1;
+    color: var(--color-accent-light);
+  }
+
+  .book-stat__icon {
+    display: inline-flex;
+    width: 46px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .book-stat__label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-top: 10px;
+  }
+
+  .book-process {
+    padding: 96px 5vw;
+    background: var(--color-bg);
+  }
+
+  .book-process__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .book-process__header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .book-process__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  .book-process__step {
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+    border-radius: 5px;
+    padding: 40px 32px;
+  }
+
+  .book-process__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 1;
+    color: rgba(196, 122, 44, 0.3);
+  }
+
+  .book-process__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 23px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 14px 0 10px;
+  }
+
+  .book-process__text {
+    color: var(--color-text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .book-inquiry {
+    padding: 96px 5vw 110px;
+    background: linear-gradient(180deg, var(--color-bg-elevated), var(--color-bg));
+    scroll-margin-top: 90px;
+  }
+
+  .book-inquiry__inner {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .book-inquiry__header {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  .book-sticky-cta {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    background: rgba(13, 13, 13, 0.92);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(196, 122, 44, 0.3);
+    padding: 12px 5vw;
+  }
+
+  .book-sticky-cta__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .book-sticky-cta__text {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .book-sticky-cta__star {
+    color: var(--color-accent);
+    flex: none;
+  }
+
+  .book-sticky-cta__btn {
+    flex: none;
+    font-size: 14px;
+    padding: 13px 28px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 1024px) {
+    .book-types__grid,
+    .book-why__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .book-process__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .book-types__grid,
+    .book-why__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .book-sticky-cta__text span:last-child {
+      white-space: normal;
+    }
+  }
+</style>
+
+<style is:global>
+  [data-zoom]:hover [data-zoom-img] {
+    transform: scale(1.07);
+  }
+</style>

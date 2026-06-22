@@ -1,0 +1,253 @@
+<section class="booking-form" data-booking-form>
+  <div class="booking-form__success" data-booking-success hidden>
+    <div class="booking-form__success-icon" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.5">
+        <path d="M5 12l4 4 10-10"></path>
+      </svg>
+    </div>
+    <h3 class="booking-form__success-title">Inquiry Sent &mdash; Thank You!</h3>
+    <p class="booking-form__success-text">
+      We&rsquo;ll get back to you within 24&ndash;48 hours. For anything urgent, reach us at
+      <a href="mailto:sdmbooking@yahoo.com">sdmbooking@yahoo.com</a>.
+    </p>
+  </div>
+
+  <form class="booking-form__form" data-booking-form-el>
+    <div class="booking-form__honeypot" aria-hidden="true">
+      <label for="booking-website">Website</label>
+      <input
+        id="booking-website"
+        class="twy-field"
+        type="text"
+        name="website"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="booking-form__grid">
+      <div>
+        <label class="booking-form__label" for="booking-name">Name *</label>
+        <input
+          id="booking-name"
+          class="twy-field"
+          name="name"
+          type="text"
+          placeholder="Your name"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="booking-form__label" for="booking-org">Organization</label>
+        <input
+          id="booking-org"
+          class="twy-field"
+          name="org"
+          type="text"
+          placeholder="Company / venue (optional)"
+        />
+      </div>
+
+      <div>
+        <label class="booking-form__label" for="booking-phone">Phone *</label>
+        <input
+          id="booking-phone"
+          class="twy-field"
+          name="phone"
+          type="tel"
+          placeholder="(000) 000-0000"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="booking-form__label" for="booking-email">Email *</label>
+        <input
+          id="booking-email"
+          class="twy-field"
+          name="email"
+          type="email"
+          placeholder="you@email.com"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="booking-form__label" for="booking-date">Event Date</label>
+        <input id="booking-date" class="twy-field twy-field--date" name="date" type="date" />
+      </div>
+
+      <div>
+        <label class="booking-form__label" for="booking-location">Location</label>
+        <input
+          id="booking-location"
+          class="twy-field"
+          name="location"
+          type="text"
+          placeholder="City, venue or address"
+        />
+      </div>
+
+      <div class="booking-form__full">
+        <label class="booking-form__label" for="booking-audience">Estimated Audience Size</label>
+        <input
+          id="booking-audience"
+          class="twy-field"
+          name="audienceSize"
+          type="text"
+          placeholder="e.g. 150–300 guests"
+        />
+      </div>
+
+      <div class="booking-form__full">
+        <label class="booking-form__label" for="booking-message">Message</label>
+        <textarea
+          id="booking-message"
+          class="twy-field"
+          name="message"
+          rows="4"
+          placeholder="Tell us about your event…"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="booking-form__footer">
+      <div class="booking-form__error" data-booking-error hidden>
+        <p data-booking-error-msg>Something went wrong. Please try again.</p>
+      </div>
+
+      <div class="booking-form__actions">
+        <p class="booking-form__hint">We typically reply within 24&ndash;48 hours.</p>
+        <button type="submit" class="btn-primary booking-form__submit">Send Inquiry</button>
+      </div>
+    </div>
+  </form>
+</section>
+
+<script src="../scripts/booking-form.ts"></script>
+
+<style>
+  .booking-form__form,
+  .booking-form__success {
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+    border-radius: 6px;
+    padding: 44px 40px;
+  }
+
+  .booking-form__success {
+    border-color: rgba(196, 122, 44, 0.4);
+    text-align: center;
+    padding: 64px 40px;
+  }
+
+  .booking-form__success-icon {
+    display: inline-flex;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent-dark));
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .booking-form__success-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 30px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 12px;
+  }
+
+  .booking-form__success-text {
+    color: var(--color-text-muted);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 46ch;
+    margin: 0 auto;
+  }
+
+  .booking-form__success-text a {
+    color: var(--color-accent-light);
+    text-decoration: none;
+  }
+
+  .booking-form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .booking-form__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .booking-form__full {
+    grid-column: 1 / -1;
+  }
+
+  .booking-form__label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+  }
+
+  .booking-form__footer {
+    margin-top: 28px;
+  }
+
+  .booking-form__error {
+    background: rgba(180, 40, 40, 0.12);
+    border: 1px solid rgba(220, 80, 80, 0.35);
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .booking-form__error p {
+    margin: 0;
+    color: #e8a0a0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .booking-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .booking-form__hint {
+    color: var(--color-text-dim);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  .booking-form__submit {
+    font-size: 16px;
+    padding: 17px 40px;
+  }
+
+  @media (max-width: 640px) {
+    .booking-form__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .booking-form__full {
+      grid-column: auto;
+    }
+  }
+</style>
