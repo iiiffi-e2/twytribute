@@ -1,0 +1,147 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  bio: string;
+  funFact?: string;
+  photoUrl: string;
+  photoPosition?: string;
+}
+
+const { name, role, bio, funFact, photoUrl, photoPosition = 'center center' } = Astro.props;
+---
+
+<article class="member-card" data-member>
+  <div class="member-card__photo-wrap">
+    <img
+      src={photoUrl}
+      alt={name}
+      class="member-card__photo"
+      data-member-img
+      style={`object-position: ${photoPosition};`}
+      loading="lazy"
+    />
+    <div class="member-card__photo-gradient"></div>
+    {
+      funFact && (
+        <div class="member-card__fact" data-fact>
+          <div class="member-card__fact-label">Fun Fact</div>
+          <p class="member-card__fact-text">{funFact}</p>
+        </div>
+      )
+    }
+  </div>
+  <div class="member-card__body">
+    <div class="member-card__name">{name}</div>
+    <div class="member-card__role">
+      <span class="member-card__role-star" aria-hidden="true">&#9733;</span>
+      <span>{role}</span>
+    </div>
+    <p class="member-card__bio">{bio}</p>
+  </div>
+</article>
+
+<style>
+  .member-card {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--color-bg);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+  }
+
+  .member-card__photo-wrap {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+
+  .member-card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .member-card:hover .member-card__photo {
+    transform: scale(1.05);
+  }
+
+  .member-card__photo-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0) 40%, rgba(13, 13, 13, 0.92));
+    pointer-events: none;
+  }
+
+  .member-card__fact {
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 13, 13, 0.82);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 26px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .member-card:hover .member-card__fact {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .member-card__fact-label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+    margin-bottom: 10px;
+  }
+
+  .member-card__fact-text {
+    color: var(--color-text);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .member-card__body {
+    padding: 20px 22px 24px;
+  }
+
+  .member-card__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 21px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  .member-card__role {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-accent-light);
+  }
+
+  .member-card__role-star {
+    color: var(--color-accent);
+    font-size: 12px;
+  }
+
+  .member-card__bio {
+    color: var(--color-text-muted);
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin: 12px 0 0;
+  }
+</style>

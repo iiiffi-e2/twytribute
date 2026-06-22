@@ -1,0 +1,517 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import BandMemberCard from '../components/BandMemberCard.astro';
+
+interface BandMember {
+  _id: string;
+  name: string;
+  role: string;
+  bio: string;
+  funFact?: string;
+  photoPosition?: string;
+  sortOrder?: number;
+  photoUrl?: string;
+}
+
+const MOCK_BAND_MEMBERS: BandMember[] = [
+  {
+    _id: 'member-chris-rowland',
+    name: 'Chris Rowland',
+    role: 'Lead Vocals / Guitar',
+    photoPosition: '10% 18%',
+    bio: 'The voice out front — chasing that gravel-and-soul tone that makes you check twice.',
+    funFact:
+      'Can go from a whisper to a full-throated holler in the same line — and the room goes quiet for both.',
+    photoUrl: '/assets/band-tree2.jpg',
+    sortOrder: 0,
+  },
+  {
+    _id: 'member-christian-sly',
+    name: 'Christian Sly',
+    role: 'Lead Guitar / Vocals',
+    photoPosition: '37% 18%',
+    bio: 'Tone chaser and lead-line architect, weaving the licks that define the sound.',
+    funFact: 'Owns more guitar pedals than pairs of boots — and that is saying something in Texas.',
+    photoUrl: '/assets/band-tree2.jpg',
+    sortOrder: 1,
+  },
+  {
+    _id: 'member-clay-wise',
+    name: 'Clay Wise',
+    role: 'Bass / Vocals',
+    photoPosition: '63% 18%',
+    bio: 'The low-end anchor — locks the pocket and keeps the dance floor honest.',
+    funFact: 'Counts the band in by feel; swears he has never needed a click track in his life.',
+    photoUrl: '/assets/band-tree2.jpg',
+    sortOrder: 2,
+  },
+  {
+    _id: 'member-tull-rea',
+    name: 'Tull Rea',
+    role: 'Drums / Vocals',
+    photoPosition: '90% 18%',
+    bio: 'The engine room. Dynamics, groove, and the build that lifts every chorus.',
+    funFact: 'Warms up on a practice pad in the truck before every single show, rain or shine.',
+    photoUrl: '/assets/band-tree2.jpg',
+    sortOrder: 3,
+  },
+];
+
+const projectId = import.meta.env.SANITY_PROJECT_ID ?? '';
+let members: BandMember[] = MOCK_BAND_MEMBERS;
+
+if (projectId) {
+  try {
+    const { sanityClient } = await import('../lib/sanity');
+    const { BAND_MEMBERS_QUERY } = await import('../lib/queries');
+    const fetched = await sanityClient.fetch<BandMember[]>(BAND_MEMBERS_QUERY);
+
+    if (Array.isArray(fetched) && fetched.length > 0) {
+      members = fetched;
+    }
+  } catch {
+    // Fall back to mock data when Sanity is unreachable.
+  }
+}
+---
+
+<BaseLayout title="The Band | Texas, Whiskey & You">
+  <Nav current="band" />
+
+  <section class="band-hero">
+    <div class="band-hero__bg"></div>
+    <div class="band-hero__overlay"></div>
+    <div class="band-hero__inner">
+      <div class="band-hero__eyebrow">
+        <span class="band-hero__star" aria-hidden="true">&#9733;</span>
+        <span class="band-hero__label">Four Pickers, One Sound</span>
+      </div>
+      <h1 class="band-hero__title">The Band</h1>
+    </div>
+  </section>
+
+  <section class="band-story">
+    <div class="band-story__grid">
+      <div class="band-story__photo">
+        <div class="band-story__photo-img"></div>
+        <div class="band-story__photo-border"></div>
+      </div>
+      <div>
+        <div class="section-label band-story__label">Our Story</div>
+        <h2 class="band-story__title">Born In North Texas, Built For The Stage</h2>
+        <p class="band-story__text">
+          Texas, Whiskey &amp; You came together for one reason &mdash; a shared obsession with the soul, grit, and
+          songwriting of Chris Stapleton. What started as a handful of friends trading licks turned into one of North
+          Texas&rsquo; most-requested tribute experiences.
+        </p>
+        <p class="band-story__text">
+          We don&rsquo;t do karaoke. Four seasoned musicians chase the real tone, the real dynamics, and that
+          unmistakable gravel-and-soul vocal &mdash; then let the room take over.
+        </p>
+        <p class="band-story__text band-story__text--last">
+          Our mission is simple: give every crowd, in every kind of room, a night that feels like the real thing.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-members">
+    <div class="band-members__inner">
+      <div class="band-members__header">
+        <div class="section-label">Meet The Pickers</div>
+        <h2 class="band-members__title">The Lineup</h2>
+      </div>
+      <div class="band-members__grid">
+        {
+          members.map((member) => (
+            <BandMemberCard
+              name={member.name}
+              role={member.role}
+              bio={member.bio}
+              funFact={member.funFact}
+              photoUrl={member.photoUrl || '/assets/band-tree2.jpg'}
+              photoPosition={member.photoPosition}
+            />
+          ))
+        }
+      </div>
+      <p class="band-members__hint">
+        Hover a card for a fun fact. Photos are crops from a group shot &mdash; drop in individual headshots anytime.
+      </p>
+    </div>
+  </section>
+
+  <section class="band-gear">
+    <div class="band-gear__inner">
+      <div class="band-gear__header">
+        <div class="section-label">Tools Of The Trade</div>
+        <h2 class="band-gear__title">The Gear</h2>
+      </div>
+      <div class="band-gear__grid">
+        <div class="gear-card">
+          <div class="gear-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="8" cy="16" r="4"></circle>
+              <path d="M11 13l8-8M16 5h3v3"></path>
+            </svg>
+          </div>
+          <h3 class="gear-card__title">Guitars</h3>
+          <p class="gear-card__text">
+            Vintage-voiced electrics and warm dreadnought acoustics tuned for that Stapleton bark and shimmer.
+          </p>
+        </div>
+        <div class="gear-card">
+          <div class="gear-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" aria-hidden="true">
+              <rect x="4" y="3" width="16" height="18" rx="2"></rect>
+              <circle cx="12" cy="13" r="4"></circle>
+              <circle cx="8" cy="6.5" r="0.6" fill="#D38B36"></circle>
+              <circle cx="16" cy="6.5" r="0.6" fill="#D38B36"></circle>
+            </svg>
+          </div>
+          <h3 class="gear-card__title">Amplifiers</h3>
+          <p class="gear-card__text">
+            Tube amps that breathe &mdash; cleans that sparkle and overdrive that growls without ever getting harsh.
+          </p>
+        </div>
+        <div class="gear-card">
+          <div class="gear-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 12h2l2-6 4 14 3-10 2 4 3-2"></path>
+            </svg>
+          </div>
+          <h3 class="gear-card__title">Pro Sound</h3>
+          <p class="gear-card__text">
+            Full PA, in-ears, and a seasoned engineer&rsquo;s ear &mdash; we bring the rig or plug into yours, festival
+            to ballroom.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-cta">
+    <div class="band-cta__bg"></div>
+    <div class="band-cta__overlay"></div>
+    <div class="band-cta__inner">
+      <h2 class="band-cta__title">Let&rsquo;s Make Some Noise</h2>
+      <p class="band-cta__text">
+        Book the full band for your next festival, venue night, or private party.
+      </p>
+      <a href="/book" class="btn-primary band-cta__btn">Book The Band</a>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .band-hero {
+    position: relative;
+    min-height: 78vh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .band-hero__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/band-barn-group.jpg');
+    background-size: cover;
+    background-position: center 30%;
+  }
+
+  .band-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(13, 13, 13, 0.65) 0%,
+      rgba(13, 13, 13, 0.4) 40%,
+      rgba(13, 13, 13, 0.96) 100%
+    );
+  }
+
+  .band-hero__inner {
+    position: relative;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 170px 5vw 70px;
+  }
+
+  .band-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .band-hero__star {
+    color: var(--color-accent);
+  }
+
+  .band-hero__label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .band-hero__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(44px, 7vw, 96px);
+    line-height: 0.92;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--color-text);
+    text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .band-story {
+    padding: 96px 5vw;
+    background: var(--color-bg);
+  }
+
+  .band-story__grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 54px;
+    align-items: center;
+  }
+
+  .band-story__photo {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+  }
+
+  .band-story__photo-img {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/bw-duo.jpg');
+    background-size: cover;
+    background-position: center 20%;
+  }
+
+  .band-story__photo-border {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(196, 122, 44, 0.25);
+    border-radius: 6px;
+    pointer-events: none;
+  }
+
+  .band-story__label {
+    margin-bottom: 16px;
+  }
+
+  .band-story__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 3.6vw, 46px);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 22px;
+  }
+
+  .band-story__text {
+    color: var(--color-text-muted);
+    font-size: 16px;
+    line-height: 1.75;
+    margin: 0 0 16px;
+  }
+
+  .band-story__text--last {
+    margin-bottom: 0;
+  }
+
+  .band-members {
+    padding: 80px 5vw 96px;
+    background: var(--color-bg-elevated);
+  }
+
+  .band-members__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .band-members__header {
+    text-align: center;
+    margin-bottom: 54px;
+  }
+
+  .band-members__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 4.4vw, 54px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 14px 0 0;
+  }
+
+  .band-members__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .band-members__hint {
+    text-align: center;
+    color: var(--color-text-dim);
+    font-size: 13px;
+    margin: 26px auto 0;
+    max-width: 60ch;
+  }
+
+  .band-gear {
+    padding: 96px 5vw;
+    background: var(--color-bg);
+  }
+
+  .band-gear__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .band-gear__header {
+    text-align: center;
+    margin-bottom: 54px;
+  }
+
+  .band-gear__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(30px, 4.4vw, 54px);
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 14px 0 0;
+  }
+
+  .band-gear__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .gear-card {
+    background: var(--color-bg-elevated);
+    border: 1px solid rgba(244, 233, 216, 0.08);
+    border-radius: 5px;
+    padding: 38px 32px;
+    transition: border-color 0.25s ease;
+  }
+
+  .gear-card:hover {
+    border-color: rgba(196, 122, 44, 0.4);
+  }
+
+  .gear-card__icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(196, 122, 44, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+
+  .gear-card__title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 12px;
+  }
+
+  .gear-card__text {
+    color: var(--color-text-muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .band-cta {
+    position: relative;
+    padding: 110px 5vw;
+    overflow: hidden;
+  }
+
+  .band-cta__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/bw-barn-band.jpg');
+    background-size: cover;
+    background-position: center 38%;
+  }
+
+  .band-cta__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.94));
+  }
+
+  .band-cta__inner {
+    position: relative;
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .band-cta__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 62px);
+    line-height: 0.96;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 0 0 22px;
+  }
+
+  .band-cta__text {
+    color: var(--color-text-muted);
+    font-size: 17px;
+    line-height: 1.6;
+    max-width: 50ch;
+    margin: 0 auto 34px;
+  }
+
+  .band-cta__btn {
+    display: inline-block;
+    font-size: 16px;
+    padding: 18px 40px;
+    box-shadow: 0 10px 34px rgba(196, 122, 44, 0.45);
+  }
+
+  @media (max-width: 1024px) {
+    .band-members__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .band-gear__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .band-story__grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+
+    .band-members__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
