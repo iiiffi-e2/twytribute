@@ -1,7 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-import { imageSrcSet, optimizeImageUrl } from '../lib/images';
+import { imageSrcSet, optimizeImageUrl, resolveImgSize } from '../lib/images';
 
 import bandBarnGroup from '../../public/assets/band-barn-group.jpg';
 import bandTree1 from '../../public/assets/band-tree1.jpg';
@@ -71,6 +71,11 @@ const imgStyle = objectPosition ? `object-position: ${objectPosition};` : undefi
 
 const local = LOCAL_IMAGES[src];
 const fallbackWidth = width ?? widths[widths.length - 1] ?? 800;
+const displaySize = resolveImgSize(
+  src,
+  { width: fallbackWidth, height },
+  local ? { width: local.width, height: local.height } : undefined,
+);
 const remoteSrc = optimizeImageUrl(src, { width: fallbackWidth });
 const remoteSrcSet = src.startsWith('http') ? imageSrcSet(src, widths) : undefined;
 ---
@@ -84,8 +89,8 @@ const remoteSrcSet = src.startsWith('http') ? imageSrcSet(src, widths) : undefin
       widths={widths}
       sizes={sizes}
       formats={['avif', 'webp']}
-      width={width}
-      height={height}
+      width={displaySize.width}
+      height={displaySize.height}
       loading={loading}
       fetchpriority={fetchpriority}
       decoding={decoding}
@@ -99,8 +104,8 @@ const remoteSrcSet = src.startsWith('http') ? imageSrcSet(src, widths) : undefin
       sizes={remoteSrcSet ? sizes : undefined}
       alt={alt}
       class={className}
-      width={width}
-      height={height}
+      width={displaySize.width}
+      height={displaySize.height}
       loading={loading}
       fetchpriority={fetchpriority}
       decoding={decoding}
