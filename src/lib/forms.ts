@@ -15,3 +15,9 @@ export function validateBookingForm(data: {
   if (!EMAIL_RE.test(data.email)) return { ok: false as const, error: 'Invalid email' };
   return { ok: true as const };
 }
+
+export function validateNewsletterForm(data: { email: string; website: string }) {
+  if (data.website) return { ok: false as const, error: 'Invalid submission' };
+  if (!EMAIL_RE.test(data.email.trim())) return { ok: false as const, error: 'Invalid email' };
+  return { ok: true as const };
+}

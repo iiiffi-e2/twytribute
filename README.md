@@ -32,8 +32,11 @@ cp .env.example .env
 | `SANITY_READ_TOKEN` | Yes | Read-only API token for build-time fetches |
 | `RESEND_API_KEY` | Yes* | Resend API key for form emails |
 | `CONTACT_EMAIL` | No | Fallback inbox if Sanity Site Settings are empty (default: `sdmbooking@yahoo.com`) |
+| `GOOGLE_SHEETS_WEBHOOK_URL` | Yes** | Apps Script web app URL for footer newsletter signups |
+| `GOOGLE_SHEETS_WEBHOOK_SECRET` | Yes** | Shared secret sent with each signup so a leaked URL cannot spam the sheet |
 
 \*Required for contact/booking forms to work locally.
+\*\*Required for the footer email signup to write to the Google Sheet.
 
 ### 3. Start the dev server
 
@@ -119,6 +122,8 @@ In **Project Settings → Environment Variables**, add:
 | `SANITY_READ_TOKEN` | Read-only Sanity API token |
 | `RESEND_API_KEY` | Your Resend API key |
 | `CONTACT_EMAIL` | Fallback inbox if Sanity Site Settings are empty (`sdmbooking@yahoo.com`) |
+| `GOOGLE_SHEETS_WEBHOOK_URL` | Apps Script web app URL for newsletter signups |
+| `GOOGLE_SHEETS_WEBHOOK_SECRET` | Shared secret that matches the Apps Script `WEBHOOK_SECRET` |
 
 Apply to **Production**, **Preview**, and **Development** environments as needed.
 
@@ -159,6 +164,57 @@ Contact and booking forms send email via Resend from `noreply@twytribute.com`. B
 4. Ensure `RESEND_API_KEY` is set in Vercel.
 
 Until the domain is verified, Resend may reject sends from `@twytribute.com` addresses. Use Resend's sandbox domain for testing during development.
+
+## Newsletter Google Sheet setup
+
+Footer signups POST to `/api/newsletter`, which appends a row to a Google Sheet through a Google Apps Script web app. The sheet URL never reaches the browser.
+
+### 1. Create the sheet
+
+1. Create a Google Sheet named **TWY Newsletter**.
+2. In row 1, add headers: `Timestamp` | `Email`.
+
+### 2. Add the Apps Script
+
+1. In the sheet: **Extensions → Apps Script**.
+2. Replace the stub with:
+
+```javascript
+const WEBHOOK_SECRET = 'paste-the-same-value-as-GOOGLE_SHEETS_WEBHOOK_SECRET';
+
+function doPost(e) {
+  const data = JSON.parse(e.postData.contents);
+  if (data.secret !== WEBHOOK_SECRET) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: 'Unauthorized' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  if (!data.email) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ error: 'Missing email' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().appendRow([new Date(), data.email]);
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: true }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+```
+
+3. Put the same random string in `WEBHOOK_SECRET` here and in `GOOGLE_SHEETS_WEBHOOK_SECRET`.
+
+### 3. Deploy the web app
+
+1. **Deploy → New deployment**.
+2. Type: **Web app**.
+3. **Execute as:** Me.
+4. **Who has access:** Anyone.
+5. Deploy, authorize the script, and copy the web app URL.
+6. Set `GOOGLE_SHEETS_WEBHOOK_URL` and `GOOGLE_SHEETS_WEBHOOK_SECRET` in `.env` and in Vercel.
+
+After a successful signup, a new row appears in the sheet: timestamp and email. Duplicate addresses are allowed; filter them in the sheet if needed.
 
 ## Legacy URL redirects
 

@@ -19,6 +19,16 @@ const { publicEmail } = await getSiteSettings();
         </p>
       </div>
       <form class="footer__form" data-newsletter-form>
+        <div class="footer__honeypot" aria-hidden="true">
+          <label for="newsletter-website">Website</label>
+          <input
+            id="newsletter-website"
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
         <input
           type="email"
           name="email"
@@ -28,6 +38,9 @@ const { publicEmail } = await getSiteSettings();
           required
         />
         <button type="submit" class="footer__submit" data-newsletter-btn>Sign Up</button>
+        <div class="footer__error" data-newsletter-error hidden>
+          <p data-newsletter-error-msg>Failed to save signup. Please try again.</p>
+        </div>
       </form>
     </div>
 
