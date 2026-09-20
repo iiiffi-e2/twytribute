@@ -14,7 +14,6 @@ export default defineConfig({
   },
   vite: {
     build: {
-      cssCodeSplit: false,
       cssMinify: true,
       minify: true,
       assetsInlineLimit: 4096,
