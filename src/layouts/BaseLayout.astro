@@ -9,6 +9,7 @@ import {
   buildWebsiteSchema,
   type BandMemberInput,
 } from '../lib/seo';
+import { getSiteSettings } from '../lib/site-settings';
 
 interface Props {
   title: string;
@@ -26,20 +27,12 @@ const {
   schemas = [],
 } = Astro.props;
 
-const fontPreloads = [
-  '/fonts/oswald.woff2',
-  '/fonts/oswald-700.woff2',
-  '/fonts/manrope.woff2',
-  '/fonts/manrope-600.woff2',
-  '/fonts/manrope-700.woff2',
-  '/fonts/zilla-slab-500.woff2',
-  '/fonts/zilla-slab-600.woff2',
-  '/fonts/zilla-slab-700.woff2',
-];
+const fontPreloads = ['/fonts/oswald-700.woff2'];
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = absoluteUrl(ogImage);
+const { publicEmail } = await getSiteSettings();
 
-const jsonLd = [buildMusicGroupSchema(members), buildWebsiteSchema(), ...schemas];
+const jsonLd = [buildMusicGroupSchema(members, publicEmail), buildWebsiteSchema(), ...schemas];
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -47,12 +40,26 @@ const jsonLd = [buildMusicGroupSchema(members), buildWebsiteSchema(), ...schemas
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="google-site-verification" content="akABGnyzC_V4lFvji2d7LQPJ-cYsvUKUTmEURzjqpDc" />
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WLRT649FDL"></script>
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-WLRT649FDL');
+    function loadGtag() {
+      if (document.getElementById('gtag-js')) return;
+      var script = document.createElement('script');
+      script.id = 'gtag-js';
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-WLRT649FDL';
+      script.async = true;
+      script.onload = function () {
+        gtag('js', new Date());
+        gtag('config', 'G-WLRT649FDL', { transport_type: 'beacon' });
+      };
+      document.head.appendChild(script);
+    }
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadGtag, { timeout: 4000 });
+    } else {
+      window.addEventListener('load', loadGtag);
+    }
   </script>
   <title>{title}</title>
   <meta name="description" content={description} />

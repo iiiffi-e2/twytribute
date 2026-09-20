@@ -31,7 +31,7 @@ cp .env.example .env
 | `SANITY_DATASET` | No | Dataset name (default: `production`) |
 | `SANITY_READ_TOKEN` | Yes | Read-only API token for build-time fetches |
 | `RESEND_API_KEY` | Yes* | Resend API key for form emails |
-| `CONTACT_EMAIL` | No | Inbox for form submissions (default: `sdmbooking@yahoo.com`) |
+| `CONTACT_EMAIL` | No | Fallback inbox if Sanity Site Settings are empty (default: `sdmbooking@yahoo.com`) |
 
 \*Required for contact/booking forms to work locally.
 
@@ -118,7 +118,7 @@ In **Project Settings → Environment Variables**, add:
 | `SANITY_DATASET` | `production` |
 | `SANITY_READ_TOKEN` | Read-only Sanity API token |
 | `RESEND_API_KEY` | Your Resend API key |
-| `CONTACT_EMAIL` | `sdmbooking@yahoo.com` (or your booking inbox) |
+| `CONTACT_EMAIL` | Fallback inbox if Sanity Site Settings are empty (`sdmbooking@yahoo.com`) |
 
 Apply to **Production**, **Preview**, and **Development** environments as needed.
 

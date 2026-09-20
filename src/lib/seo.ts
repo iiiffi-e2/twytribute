@@ -1,3 +1,5 @@
+import { FALLBACK_PUBLIC_EMAIL } from './site-settings';
+
 export const SITE_ORIGIN = 'https://twytribute.com';
 export const SITE_NAME = 'Texas, Whiskey & You';
 export const SITE_DESCRIPTION =
@@ -41,7 +43,10 @@ function regionFromCity(city: string): string | undefined {
   return match?.[1];
 }
 
-export function buildMusicGroupSchema(members: BandMemberInput[] = []) {
+export function buildMusicGroupSchema(
+  members: BandMemberInput[] = [],
+  email = FALLBACK_PUBLIC_EMAIL,
+) {
   return {
     '@context': 'https://schema.org',
     '@type': 'MusicGroup',
@@ -62,7 +67,7 @@ export function buildMusicGroupSchema(members: BandMemberInput[] = []) {
       name: 'North Texas',
     },
     sameAs: ['https://www.instagram.com/texaswhiskeyandyou'],
-    email: 'sdmbooking@yahoo.com',
+    email,
     ...(members.length > 0
       ? {
           member: members.map((member) => ({

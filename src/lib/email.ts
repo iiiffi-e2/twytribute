@@ -1,13 +1,15 @@
 import { Resend } from 'resend';
+import { applySubjectTemplate, getSiteSettings } from './site-settings';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
 export async function sendContactEmail(data: { name: string; email: string; message: string }) {
+  const settings = await getSiteSettings();
   return resend.emails.send({
     from: 'TWY Website <noreply@twytribute.com>',
-    to: import.meta.env.CONTACT_EMAIL,
+    to: settings.contactEmail,
     replyTo: data.email,
-    subject: `TWY Website Contact: ${data.name}`,
+    subject: applySubjectTemplate(settings.contactSubject, data.name),
     html: `<p><strong>From:</strong> ${data.name} (${data.email})</p><p>${data.message}</p>`,
   });
 }
@@ -36,11 +38,12 @@ export async function sendBookingEmail(data: {
     .map(([label, value]) => `<p><strong>${label}:</strong> ${value}</p>`)
     .join('');
 
+  const settings = await getSiteSettings();
   return resend.emails.send({
     from: 'TWY Website <noreply@twytribute.com>',
-    to: import.meta.env.CONTACT_EMAIL,
+    to: settings.bookingEmail,
     replyTo: data.email,
-    subject: `TWY Booking Inquiry: ${data.name}`,
+    subject: applySubjectTemplate(settings.bookingSubject, data.name),
     html: fields || '<p>No details provided.</p>',
   });
 }

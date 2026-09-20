@@ -1,5 +1,9 @@
 ---
+import OptimizedImg from './OptimizedImg.astro';
+import { getSiteSettings } from '../lib/site-settings';
+
 const year = new Date().getFullYear();
+const { publicEmail } = await getSiteSettings();
 ---
 
 <footer class="footer">
@@ -29,7 +33,15 @@ const year = new Date().getFullYear();
 
     <div class="footer__grid" data-foot-grid>
       <div>
-        <img src="/assets/logo-twy.png" alt="Texas, Whiskey & You" class="footer__logo" />
+        <OptimizedImg
+          src="/assets/logo-twy.png"
+          alt="Texas, Whiskey & You"
+          class="footer__logo"
+          widths={[160, 320]}
+          sizes="160px"
+          width={160}
+          height={160}
+        />
         <p class="footer__about">
           North Texas&rsquo; premier live tribute to the soul, grit, and songs of Chris Stapleton. Festivals, venues, wineries, corporate &amp; private events.
         </p>
@@ -45,7 +57,7 @@ const year = new Date().getFullYear();
         <div class="footer__col-title">Connect</div>
         <a href="/book" class="footer__link">Book The Band</a>
         <a href="https://www.instagram.com/texaswhiskeyandyou" target="_blank" rel="noopener" class="footer__link">Instagram</a>
-        <a href="mailto:sdmbooking@yahoo.com" class="footer__link">sdmbooking@yahoo.com</a>
+        <a href={`mailto:${publicEmail}`} class="footer__link">{publicEmail}</a>
         <a href="/contact" class="footer__link">Contact</a>
       </div>
     </div>
@@ -180,10 +192,16 @@ const year = new Date().getFullYear();
     padding: 54px 0;
   }
 
+  .footer :global(picture) {
+    display: block;
+    width: 160px;
+    margin-bottom: 18px;
+  }
+
   .footer__logo {
     width: 160px;
     height: auto;
-    margin-bottom: 18px;
+    margin-bottom: 0;
   }
 
   .footer__about {

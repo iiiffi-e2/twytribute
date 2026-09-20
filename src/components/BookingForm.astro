@@ -1,3 +1,9 @@
+---
+import { getSiteSettings } from '../lib/site-settings';
+
+const { publicEmail } = await getSiteSettings();
+---
+
 <section class="booking-form" data-booking-form>
   <div class="booking-form__success" data-booking-success hidden>
     <div class="booking-form__success-icon" aria-hidden="true">
@@ -8,7 +14,7 @@
     <h3 class="booking-form__success-title">Inquiry Sent &mdash; Thank You!</h3>
     <p class="booking-form__success-text">
       We&rsquo;ll get back to you within 24&ndash;48 hours. For anything urgent, reach us at
-      <a href="mailto:sdmbooking@yahoo.com">sdmbooking@yahoo.com</a>.
+      <a href={`mailto:${publicEmail}`}>{publicEmail}</a>.
     </p>
   </div>
 

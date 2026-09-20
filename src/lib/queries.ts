@@ -17,3 +17,7 @@ export const VIDEOS_QUERY = `*[_type == "video"] | order(sortOrder asc) {
 export const BAND_MEMBERS_QUERY = `*[_type == "bandMember"] | order(sortOrder asc) {
   _id, name, role, bio, funFact, photoPosition, sortOrder, "photoUrl": photo.asset->url
 }`;
+
+export const SITE_SETTINGS_QUERY = `*[_id == "siteSettings"][0] {
+  publicEmail, contactEmail, contactSubject, bookingEmail, bookingSubject
+}`;

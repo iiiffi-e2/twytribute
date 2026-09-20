@@ -5,8 +5,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ContactForm from '../components/ContactForm.astro';
+import OptimizedImg from '../components/OptimizedImg.astro';
 import FaqList from '../components/FaqList.astro';
 import { BOOKING_FAQS, buildFaqPageSchema } from '../lib/seo';
+import { getSiteSettings } from '../lib/site-settings';
+
+const { publicEmail } = await getSiteSettings();
 
 const INSTAGRAM_FEED = [
   { src: '/assets/live-crowd.jpg', alt: 'Crowd watching Texas, Whiskey & You live' },
@@ -45,7 +49,7 @@ const INSTAGRAM_FEED = [
       <div class="contact-info">
         <div class="section-label contact-info__label">Reach Us</div>
 
-        <a href="mailto:sdmbooking@yahoo.com" class="contact-info__card">
+        <a href={`mailto:${publicEmail}`} class="contact-info__card">
           <span class="contact-info__icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D38B36" stroke-width="2">
               <rect x="3" y="5" width="18" height="14" rx="2"></rect>
@@ -54,7 +58,7 @@ const INSTAGRAM_FEED = [
           </span>
           <span>
             <span class="contact-info__card-label">Booking Email</span>
-            <span class="contact-info__card-value">sdmbooking@yahoo.com</span>
+            <span class="contact-info__card-value">{publicEmail}</span>
           </span>
         </a>
 
@@ -137,12 +141,15 @@ const INSTAGRAM_FEED = [
               class="contact-instagram__item"
               data-zoom
             >
-              <img
+              <OptimizedImg
                 src={item.src}
                 alt={item.alt}
                 class="contact-instagram__img"
-                data-zoom-img
-                loading="lazy"
+                widths={[240, 360, 480]}
+                sizes="(max-width: 700px) 30vw, 180px"
+                width={480}
+                height={480}
+                zoom
               />
             </a>
           ))
@@ -381,6 +388,12 @@ const INSTAGRAM_FEED = [
     aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 3px;
+    display: block;
+  }
+
+  .contact-instagram__item :global(picture) {
+    width: 100%;
+    height: 100%;
     display: block;
   }
 

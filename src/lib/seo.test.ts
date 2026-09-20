@@ -36,6 +36,11 @@ describe('buildMusicGroupSchema', () => {
       },
     ]);
   });
+
+  it('uses a provided public email', () => {
+    const schema = buildMusicGroupSchema([], 'hello@twytribute.com');
+    expect(schema.email).toBe('hello@twytribute.com');
+  });
 });
 
 describe('buildMusicEventSchema', () => {
