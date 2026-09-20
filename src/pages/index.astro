@@ -5,6 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ShowCard from '../components/ShowCard.astro';
+import OptimizedImg from '../components/OptimizedImg.astro';
 import { formatShowDate, buildMapsUrl, buildCalendarUrl, resolveShowStatus } from '../lib/shows';
 import { buildMusicEventSchema, buildVideoObjectSchema } from '../lib/seo';
 
@@ -363,11 +364,14 @@ const extraSchemas = [
         data-video-title={videoTitle}
       >
         <button type="button" class="home-video__poster" data-video-poster aria-label="Play featured video">
-          <img
+          <OptimizedImg
             src={videoPoster}
             alt={`${videoTitle} — Texas, Whiskey & You live`}
             class="home-video__poster-img"
-            loading="lazy"
+            widths={[480, 768, 1024]}
+            sizes="(max-width: 1100px) 92vw, 1100px"
+            width={1024}
+            height={576}
           />
           <div class="home-video__poster-overlay"></div>
           <div class="home-video__poster-content">
@@ -450,12 +454,15 @@ const extraSchemas = [
         {
           galleryItems.map((item) => (
             <div class="gallery-preview__item" data-zoom>
-              <img
+              <OptimizedImg
                 src={item.imageUrl}
                 alt={item.alt}
                 class="gallery-preview__img"
-                loading="lazy"
-                data-zoom-img
+                widths={[360, 540, 800]}
+                sizes="(max-width: 600px) 92vw, (max-width: 900px) 45vw, 33vw"
+                width={800}
+                height={1000}
+                zoom
               />
             </div>
           ))
@@ -488,10 +495,6 @@ const extraSchemas = [
 
   <Footer />
 </BaseLayout>
-
-<script src="../scripts/parallax.ts"></script>
-<script src="../scripts/show-filter.ts"></script>
-<script src="../scripts/video-player.ts"></script>
 
 <style>
   .hero {
@@ -814,6 +817,14 @@ const extraSchemas = [
     background: none;
   }
 
+  .home-video__poster :global(picture) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
   .home-video__poster-img {
     position: absolute;
     inset: 0;
@@ -1003,6 +1014,11 @@ const extraSchemas = [
     margin-bottom: 16px;
     overflow: hidden;
     border-radius: 3px;
+  }
+
+  .gallery-preview__item :global(picture) {
+    display: block;
+    width: 100%;
   }
 
   .gallery-preview__img {

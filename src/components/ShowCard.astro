@@ -35,13 +35,27 @@ const ctaLabel = (!href || href === '#') && isUpcoming ? 'Inquire' : label;
     </div>
   </div>
   <div class="show-card__actions" data-actions>
-    <a href={maps} target="_blank" rel="noopener" title="Google Maps" class="show-card__icon-btn">
+    <a
+      href={maps}
+      target="_blank"
+      rel="noopener"
+      title={`Directions to ${venue} in ${city}`}
+      aria-label={`Directions to ${venue} in ${city}`}
+      class="show-card__icon-btn"
+    >
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"></path>
         <circle cx="12" cy="9" r="2.4"></circle>
       </svg>
     </a>
-    <a href={cal} target="_blank" rel="noopener" title="Add to Calendar" class="show-card__icon-btn">
+    <a
+      href={cal}
+      target="_blank"
+      rel="noopener"
+      title={`Add ${venue} to calendar`}
+      aria-label={`Add ${venue} to calendar`}
+      class="show-card__icon-btn"
+    >
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <rect x="3" y="5" width="18" height="16" rx="2"></rect>
         <path d="M3 9h18M8 3v4M16 3v4"></path>
@@ -100,7 +114,7 @@ const ctaLabel = (!href || href === '#') && isUpcoming ? 'Inquire' : label;
 
   .show-card__year {
     font-size: 11px;
-    color: var(--color-text-dim);
+    color: var(--color-text-muted);
     margin-top: 2px;
   }
 

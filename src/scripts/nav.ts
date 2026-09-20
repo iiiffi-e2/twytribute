@@ -13,7 +13,7 @@ function initNav(root: HTMLElement): void {
     const progress = max > 0 ? Math.min(1, Math.max(0, scrollTop / max)) : 0;
 
     if (progressFill) {
-      progressFill.style.width = `${(progress * 100).toFixed(2)}%`;
+      progressFill.style.transform = `scaleX(${progress.toFixed(4)})`;
     }
     if (navBar) {
       navBar.classList.toggle('nav-bar--scrolled', scrollTop > 30);

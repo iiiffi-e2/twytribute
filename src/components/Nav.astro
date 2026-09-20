@@ -1,4 +1,6 @@
 ---
+import OptimizedImg from './OptimizedImg.astro';
+
 interface Props {
   current?: string;
 }
@@ -23,7 +25,16 @@ const links = [
 
   <nav class="nav-bar" data-nav-bar>
     <a href="/" class="nav-logo">
-      <img src="/assets/twyicon.png" alt="Texas, Whiskey & You" class="nav-logo__icon" />
+      <OptimizedImg
+        src="/assets/twyicon.png"
+        alt="Texas, Whiskey & You"
+        class="nav-logo__icon"
+        widths={[42, 84]}
+        sizes="42px"
+        width={42}
+        height={42}
+        loading="eager"
+      />
       <span class="nav-logo__text">
         <span class="nav-logo__title">TEXAS, WHISKEY &amp; YOU</span>
         <span class="nav-logo__tagline">A TRIBUTE TO CHRIS STAPLETON</span>
@@ -66,8 +77,6 @@ const links = [
   </div>
 </div>
 
-<script src="../scripts/nav.ts"></script>
-
 <style>
   .nav-wrap {
     position: fixed;
@@ -86,9 +95,11 @@ const links = [
 
   .progress-fill {
     height: 100%;
-    width: 0;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left center;
     background: linear-gradient(90deg, var(--color-accent-dark), var(--color-accent-light));
-    transition: width 0.1s linear;
+    will-change: transform;
   }
 
   .nav-bar {
@@ -112,6 +123,13 @@ const links = [
     align-items: center;
     gap: 12px;
     text-decoration: none;
+  }
+
+  .nav-logo :global(picture) {
+    display: block;
+    width: 42px;
+    height: 42px;
+    flex: none;
   }
 
   .nav-logo__icon {

@@ -8,6 +8,20 @@ export default defineConfig({
   trailingSlash: 'never',
   output: 'server',
   adapter: vercel({ webAnalytics: false }),
+  compressHTML: true,
+  build: {
+    inlineStylesheets: 'never',
+  },
+  vite: {
+    build: {
+      cssCodeSplit: false,
+      cssMinify: true,
+      minify: true,
+      assetsInlineLimit: 4096,
+      modulePreload: { polyfill: false },
+      reportCompressedSize: true,
+    },
+  },
 
   image: {
     domains: ['cdn.sanity.io'],

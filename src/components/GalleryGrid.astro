@@ -1,4 +1,6 @@
 ---
+import OptimizedImg from './OptimizedImg.astro';
+
 export interface GalleryItem {
   _id: string;
   imageUrl: string;
@@ -52,12 +54,15 @@ const CAT_DEFS = [
           data-category={item.category}
           data-gallery-src={item.imageUrl}
         >
-          <img
+          <OptimizedImg
             src={item.imageUrl}
             alt={item.alt}
             class="gallery-grid__img"
-            loading="lazy"
-            data-zoom-img
+            widths={[360, 540, 800]}
+            sizes="(max-width: 600px) 92vw, (max-width: 900px) 45vw, 33vw"
+            width={800}
+            height={1000}
+            zoom
           />
           <span class="gallery-grid__label">{item.label}</span>
         </div>
@@ -72,8 +77,6 @@ const CAT_DEFS = [
     <img src="" alt="" class="gallery-lightbox__img" data-gallery-lightbox-img />
   </div>
 </section>
-
-<script src="../scripts/gallery-filter.ts"></script>
 
 <style>
   .gallery-grid {
@@ -141,6 +144,11 @@ const CAT_DEFS = [
 
   .gallery-grid__item[hidden] {
     display: none;
+  }
+
+  .gallery-grid__item :global(picture) {
+    display: block;
+    width: 100%;
   }
 
   .gallery-grid__img {

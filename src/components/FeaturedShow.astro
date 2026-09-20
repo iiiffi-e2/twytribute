@@ -1,4 +1,6 @@
 ---
+import OptimizedImg from './OptimizedImg.astro';
+
 interface Props {
   day: string;
   month: string;
@@ -33,11 +35,15 @@ const ticketLabel = hasTickets ? 'Buy Tickets' : 'Get Details';
     <div class="section-label featured-show__label">Next Up</div>
     <div class="featured-show__card" data-featured>
       <div class="featured-show__media" data-zoom>
-        <img
+        <OptimizedImg
           src={imageSrc}
           alt={`${venue} in ${city} — Texas, Whiskey & You live`}
           class="featured-show__image"
-          data-zoom-img
+          widths={[480, 768, 1080]}
+          sizes="(max-width: 900px) 92vw, 50vw"
+          width={1080}
+          height={720}
+          zoom
         />
         <div class="featured-show__media-overlay"></div>
         <div class="featured-show__badge">Featured Show</div>
@@ -97,6 +103,14 @@ const ticketLabel = hasTickets ? 'Buy Tickets' : 'Get Details';
     position: relative;
     min-height: 380px;
     overflow: hidden;
+  }
+
+  .featured-show__media :global(picture) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
   .featured-show__image {

@@ -1,4 +1,6 @@
 ---
+import OptimizedImg from './OptimizedImg.astro';
+
 export interface VideoItem {
   _id: string;
   title: string;
@@ -49,12 +51,14 @@ const DEFAULT_POSTER = '/assets/twy-live1.jpg';
                 data-video-poster
                 aria-label={`Play ${video.title}`}
               >
-                <img
+                <OptimizedImg
                   src={poster}
                   alt={`${video.title} — Texas, Whiskey & You performance`}
                   class="video-grid__poster-img"
-                  data-vid-img
-                  loading="lazy"
+                  widths={[480, 768, 1024]}
+                  sizes="(max-width: 700px) 92vw, 45vw"
+                  width={1024}
+                  height={576}
                 />
                 <div class="video-grid__overlay"></div>
                 <div class="video-grid__play-wrap">
@@ -77,8 +81,6 @@ const DEFAULT_POSTER = '/assets/twy-live1.jpg';
     </div>
   </div>
 </section>
-
-<script src="../scripts/video-player.ts"></script>
 
 <style>
   .video-grid-section {
@@ -147,6 +149,14 @@ const DEFAULT_POSTER = '/assets/twy-live1.jpg';
 
   .video-grid__poster[hidden] {
     display: none;
+  }
+
+  .video-grid__poster :global(picture) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
   }
 
   .video-grid__poster-img {
