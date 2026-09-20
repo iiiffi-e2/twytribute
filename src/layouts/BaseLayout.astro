@@ -27,7 +27,7 @@ const {
   schemas = [],
 } = Astro.props;
 
-const fontPreloads = ['/fonts/oswald-700.woff2'];
+const fontPreloads = ['/fonts/oswald.woff2', '/fonts/oswald-700.woff2'];
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = absoluteUrl(ogImage);
 const { publicEmail } = await getSiteSettings();
