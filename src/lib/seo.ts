@@ -2,7 +2,7 @@ export const SITE_ORIGIN = 'https://twytribute.com';
 export const SITE_NAME = 'Texas, Whiskey & You';
 export const SITE_DESCRIPTION =
   "Texas, Whiskey & You — North Texas's premier Chris Stapleton tribute band. Authentic soul, grit, and live concert energy for festivals, venues, and private events.";
-export const DEFAULT_OG_IMAGE = '/assets/twy-hero-2.jpg';
+export const DEFAULT_OG_IMAGE = '/assets/twy-social-share.png';
 export const SITE_LOGO = '/assets/logo-twy.png';
 export const MUSIC_GROUP_ID = `${SITE_ORIGIN}/#musicgroup`;
 

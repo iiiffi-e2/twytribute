@@ -11,7 +11,7 @@ import {
 
 describe('absoluteUrl', () => {
   it('joins a site-relative path to the origin', () => {
-    expect(absoluteUrl('/assets/twy-hero-2.jpg')).toBe(`${SITE_ORIGIN}/assets/twy-hero-2.jpg`);
+    expect(absoluteUrl('/assets/twy-social-share.png')).toBe(`${SITE_ORIGIN}/assets/twy-social-share.png`);
   });
 });
 
@@ -20,7 +20,7 @@ describe('buildMusicGroupSchema', () => {
     const schema = buildMusicGroupSchema();
     expect(schema['@id']).toBe(`${SITE_ORIGIN}/#musicgroup`);
     expect(schema.description).toBe(SITE_DESCRIPTION);
-    expect(schema.image).toBe(`${SITE_ORIGIN}/assets/twy-hero-2.jpg`);
+    expect(schema.image).toBe(`${SITE_ORIGIN}/assets/twy-social-share.png`);
     expect(schema.logo).toBe(`${SITE_ORIGIN}/assets/logo-twy.png`);
   });
 
