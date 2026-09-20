@@ -1,11 +1,11 @@
 ---
-export const prerender = true;
+export const prerender = false;
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ShowCard from '../components/ShowCard.astro';
-import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus } from '../lib/shows';
+import { formatShowDate, buildMapsUrl, buildCalendarUrl, resolveShowStatus } from '../lib/shows';
 import { buildMusicEventSchema, buildVideoObjectSchema } from '../lib/seo';
 
 interface RawShow {
@@ -122,7 +122,7 @@ const TICKER_ITEMS = [
 ];
 
 function mapShow(s: RawShow) {
-  const status = s.status || deriveStatus(s.date);
+  const status = resolveShowStatus(s);
   const formatted = formatShowDate(s.date);
   const isUpcoming = status === 'upcoming';
 

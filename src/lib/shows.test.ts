@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus } from './shows';
+import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus, resolveShowStatus } from './shows';
 
 describe('formatShowDate', () => {
   it('formats date parts for display', () => {
@@ -33,5 +33,15 @@ describe('deriveStatus', () => {
   });
   it('returns past for past dates', () => {
     expect(deriveStatus('2020-01-01T20:00:00')).toBe('past');
+  });
+});
+
+describe('resolveShowStatus', () => {
+  it('moves a past date to past even when stored status is still upcoming', () => {
+    expect(resolveShowStatus({ date: '2020-01-01T20:00:00', status: 'upcoming' })).toBe('past');
+  });
+
+  it('keeps a future date upcoming', () => {
+    expect(resolveShowStatus({ date: '2099-01-01T20:00:00', status: 'past' })).toBe('upcoming');
   });
 });

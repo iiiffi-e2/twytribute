@@ -1,5 +1,5 @@
 ---
-export const prerender = true;
+export const prerender = false;
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
@@ -7,7 +7,7 @@ import Footer from '../components/Footer.astro';
 import FeaturedShow from '../components/FeaturedShow.astro';
 import ShowList from '../components/ShowList.astro';
 import type { ShowRow } from '../components/ShowList.astro';
-import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus } from '../lib/shows';
+import { formatShowDate, buildMapsUrl, buildCalendarUrl, resolveShowStatus } from '../lib/shows';
 import { buildMusicEventSchema } from '../lib/seo';
 
 interface RawShow {
@@ -100,7 +100,7 @@ const MOCK_SHOWS: RawShow[] = [
 ];
 
 function mapShow(s: RawShow) {
-  const status = s.status || deriveStatus(s.date);
+  const status = resolveShowStatus(s);
   const formatted = formatShowDate(s.date);
   const isUpcoming = status === 'upcoming';
 
@@ -151,7 +151,7 @@ if (projectId) {
     featuredRaw =
       fetchedFeatured ??
       rawShows.find((s) => s.isFeatured) ??
-      rawShows.find((s) => (s.status || deriveStatus(s.date)) === 'upcoming') ??
+      rawShows.find((s) => resolveShowStatus(s) === 'upcoming') ??
       null;
   } catch {
     // Fall back to mock data when Sanity is unreachable.
@@ -169,7 +169,8 @@ const past = shows
 const upcomingRows = upcoming.map(toShowRow);
 const pastRows = past.map(toShowRow);
 
-const featured = featuredRaw ? mapShow(featuredRaw) : upcoming[0] ?? null;
+const featured =
+  featuredRaw && resolveShowStatus(featuredRaw) === 'upcoming' ? mapShow(featuredRaw) : upcoming[0] ?? null;
 const eventSchemas = upcoming.map((show) =>
   buildMusicEventSchema({
     venue: show.venue,

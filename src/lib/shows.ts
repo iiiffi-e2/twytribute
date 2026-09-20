@@ -36,3 +36,8 @@ export function buildCalendarUrl(show: ShowInput) {
 export function deriveStatus(isoDate: string): 'upcoming' | 'past' {
   return new Date(isoDate) >= new Date() ? 'upcoming' : 'past';
 }
+
+/** Date is the source of truth. Stored CMS/mock status is ignored so shows move automatically. */
+export function resolveShowStatus(show: { date: string; status?: 'upcoming' | 'past' }): 'upcoming' | 'past' {
+  return deriveStatus(show.date);
+}
