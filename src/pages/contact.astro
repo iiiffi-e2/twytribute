@@ -5,20 +5,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ContactForm from '../components/ContactForm.astro';
+import FaqList from '../components/FaqList.astro';
+import { BOOKING_FAQS, buildFaqPageSchema } from '../lib/seo';
 
 const INSTAGRAM_FEED = [
-  '/assets/live-crowd.jpg',
-  '/assets/vocal-green.jpg',
-  '/assets/bw-duo.jpg',
-  '/assets/band-barn-group.jpg',
-  '/assets/longhorn-sign.jpg',
-  '/assets/bw-guitar-case.jpg',
+  { src: '/assets/live-crowd.jpg', alt: 'Crowd watching Texas, Whiskey & You live' },
+  { src: '/assets/vocal-green.jpg', alt: 'Lead vocals under green stage lights' },
+  { src: '/assets/bw-duo.jpg', alt: 'Two band members performing together' },
+  { src: '/assets/band-barn-group.jpg', alt: 'Texas, Whiskey & You posed as a group' },
+  { src: '/assets/longhorn-sign.jpg', alt: 'Texas, Whiskey & You stage backdrop' },
+  { src: '/assets/bw-guitar-case.jpg', alt: 'Guitar in its case backstage' },
 ];
 ---
 
 <BaseLayout
   title="Contact | Texas, Whiskey & You — Chris Stapleton Tribute"
   description="Contact Texas, Whiskey & You for booking inquiries, show questions, or just to say howdy. Reach the North Texas Chris Stapleton tribute band by email or message."
+  schemas={[buildFaqPageSchema(BOOKING_FAQS)]}
 >
   <Nav current="contact" />
 
@@ -30,7 +33,7 @@ const INSTAGRAM_FEED = [
         <span class="contact-hero__star" aria-hidden="true">&#9733;</span>
         <span class="contact-hero__label">Get In Touch</span>
       </div>
-      <h1 class="contact-hero__title">Contact</h1>
+      <h1 class="contact-hero__title">Get In Touch</h1>
       <p class="contact-hero__subtitle">
         Booking a show, asking a question, or just want to say howdy? We&rsquo;d love to hear from you.
       </p>
@@ -98,6 +101,16 @@ const INSTAGRAM_FEED = [
     </div>
   </section>
 
+  <section class="contact-faq">
+    <div class="contact-faq__inner">
+      <div class="contact-faq__header">
+        <div class="section-label">Quick Answers</div>
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+      <FaqList items={BOOKING_FAQS} />
+    </div>
+  </section>
+
   <section class="contact-instagram">
     <div class="contact-instagram__inner">
       <div class="contact-instagram__header">
@@ -116,7 +129,7 @@ const INSTAGRAM_FEED = [
       </div>
       <div class="contact-instagram__grid">
         {
-          INSTAGRAM_FEED.map((src) => (
+          INSTAGRAM_FEED.map((item) => (
             <a
               href="https://www.instagram.com/texaswhiskeyandyou"
               target="_blank"
@@ -125,8 +138,8 @@ const INSTAGRAM_FEED = [
               data-zoom
             >
               <img
-                src={src}
-                alt="Texas, Whiskey & You on Instagram"
+                src={item.src}
+                alt={item.alt}
                 class="contact-instagram__img"
                 data-zoom-img
                 loading="lazy"
@@ -208,8 +221,22 @@ const INSTAGRAM_FEED = [
   }
 
   .contact-main {
-    padding: 80px 5vw 90px;
+    padding: 80px 5vw 40px;
     background: var(--color-bg);
+  }
+
+  .contact-faq {
+    padding: 20px 5vw 80px;
+    background: var(--color-bg);
+  }
+
+  .contact-faq__inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .contact-faq__header {
+    margin-bottom: 28px;
   }
 
   .contact-main__grid {

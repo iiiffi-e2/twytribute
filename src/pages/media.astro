@@ -8,6 +8,7 @@ import GalleryGrid from '../components/GalleryGrid.astro';
 import VideoGrid from '../components/VideoGrid.astro';
 import type { GalleryItem } from '../components/GalleryGrid.astro';
 import type { VideoItem } from '../components/VideoGrid.astro';
+import { buildVideoObjectSchema } from '../lib/seo';
 
 const DEFAULT_YOUTUBE_ID = 'ZUz16UbeLPU';
 
@@ -148,11 +149,22 @@ if (projectId) {
     // Fall back to mock data when Sanity is unreachable.
   }
 }
+
+const videoSchemas = videos
+  .filter((video) => video.youtubeId?.trim())
+  .map((video) =>
+    buildVideoObjectSchema({
+      title: video.title,
+      youtubeId: video.youtubeId!.trim(),
+      posterUrl: video.posterUrl,
+    }),
+  );
 ---
 
 <BaseLayout
   title="Media | Texas, Whiskey & You — Videos & Photos"
   description="Watch live performance videos, browse concert photos, and download the press kit for Texas, Whiskey & You — North Texas's Chris Stapleton tribute experience."
+  schemas={videoSchemas}
 >
   <Nav current="media" />
 
@@ -164,7 +176,7 @@ if (projectId) {
         <span class="media-header__star" aria-hidden="true">&#9733;</span>
         <span class="media-header__label">Watch &amp; Listen</span>
       </div>
-      <h1 class="media-header__title">Media</h1>
+      <h1 class="media-header__title">Videos, Photos &amp; Press Kit</h1>
       <p class="media-header__lead">
         Performance videos, photos from the floor, and everything you need to feel the room before you book it.
       </p>
@@ -263,7 +275,7 @@ if (projectId) {
   .media-header__title {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(44px, 7vw, 92px);
+    font-size: clamp(36px, 5.4vw, 68px);
     line-height: 0.94;
     text-transform: uppercase;
     margin: 0;

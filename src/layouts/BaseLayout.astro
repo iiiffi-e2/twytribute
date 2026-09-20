@@ -1,12 +1,30 @@
 ---
 import '../styles/global.css';
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  DEFAULT_OG_IMAGE,
+  absoluteUrl,
+  buildMusicGroupSchema,
+  buildWebsiteSchema,
+  type BandMemberInput,
+} from '../lib/seo';
 
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
+  members?: BandMemberInput[];
+  schemas?: Record<string, unknown>[];
 }
 
-const { title, description = 'Texas, Whiskey & You — North Texas\'s premier Chris Stapleton tribute band. Authentic soul, grit, and live concert energy for festivals, venues, and private events.' } = Astro.props;
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  ogImage = DEFAULT_OG_IMAGE,
+  members = [],
+  schemas = [],
+} = Astro.props;
 
 const fontPreloads = [
   '/fonts/oswald.woff2',
@@ -19,28 +37,16 @@ const fontPreloads = [
   '/fonts/zilla-slab-700.woff2',
 ];
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = absoluteUrl(ogImage);
 
-const musicGroupSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'MusicGroup',
-  name: 'Texas, Whiskey & You',
-  alternateName: 'TWY',
-  url: 'https://twytribute.com',
-  description,
-  genre: ['Country', 'Tribute'],
-  areaServed: {
-    '@type': 'Place',
-    name: 'North Texas',
-  },
-  sameAs: ['https://www.instagram.com/texaswhiskeyandyou'],
-  email: 'sdmbooking@yahoo.com',
-};
+const jsonLd = [buildMusicGroupSchema(members), buildWebsiteSchema(), ...schemas];
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google-site-verification" content="akABGnyzC_V4lFvji2d7LQPJ-cYsvUKUTmEURzjqpDc" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-WLRT649FDL"></script>
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
@@ -51,11 +57,24 @@ const musicGroupSchema = {
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonicalURL} />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/twyicon.png" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
   <meta property="og:url" content={canonicalURL} />
-  <script type="application/ld+json" set:html={JSON.stringify(musicGroupSchema)} />
+  <meta property="og:site_name" content={SITE_NAME} />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content={ogImageURL} />
+  <meta property="og:image:alt" content={`${SITE_NAME} live Chris Stapleton tribute`} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImageURL} />
+  {jsonLd.map((schema) => (
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
   {fontPreloads.map((href) => (
     <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
   ))}

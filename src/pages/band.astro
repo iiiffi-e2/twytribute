@@ -82,6 +82,7 @@ if (projectId) {
 <BaseLayout
   title="The Band | Texas, Whiskey & You — Chris Stapleton Tribute"
   description="Meet the four musicians of Texas, Whiskey & You — seasoned North Texas pickers delivering an authentic Chris Stapleton tribute with real tone and live stage energy."
+  members={members.map((member) => ({ name: member.name, role: member.role }))}
 >
   <Nav current="band" />
 
@@ -93,7 +94,7 @@ if (projectId) {
         <span class="band-hero__star" aria-hidden="true">&#9733;</span>
         <span class="band-hero__label">Four Pickers, One Sound</span>
       </div>
-      <h1 class="band-hero__title">The Band</h1>
+      <h1 class="band-hero__title">Meet The Band</h1>
     </div>
   </section>
 

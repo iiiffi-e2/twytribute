@@ -8,6 +8,7 @@ import FeaturedShow from '../components/FeaturedShow.astro';
 import ShowList from '../components/ShowList.astro';
 import type { ShowRow } from '../components/ShowList.astro';
 import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus } from '../lib/shows';
+import { buildMusicEventSchema } from '../lib/seo';
 
 interface RawShow {
   _id: string;
@@ -109,8 +110,8 @@ function mapShow(s: RawShow) {
     status,
     maps: buildMapsUrl(s.venue, s.city),
     cal: buildCalendarUrl(s),
-    label: isUpcoming ? 'Tickets' : 'Recap',
-    href: isUpcoming ? (s.ticketUrl || '#') : (s.recapUrl || '/media'),
+    label: isUpcoming ? (s.ticketUrl ? 'Tickets' : 'Inquire') : 'Recap',
+    href: isUpcoming ? (s.ticketUrl || '/contact') : (s.recapUrl || '/media'),
     time: isUpcoming ? formatted.time : 'Past Show',
   };
 }
@@ -169,11 +170,20 @@ const upcomingRows = upcoming.map(toShowRow);
 const pastRows = past.map(toShowRow);
 
 const featured = featuredRaw ? mapShow(featuredRaw) : upcoming[0] ?? null;
+const eventSchemas = upcoming.map((show) =>
+  buildMusicEventSchema({
+    venue: show.venue,
+    city: show.city,
+    date: show.date,
+    ticketUrl: show.ticketUrl,
+  }),
+);
 ---
 
 <BaseLayout
   title="Upcoming Shows | Texas, Whiskey & You Tribute Band"
   description="Catch Texas, Whiskey & You live across North Texas. Browse upcoming Chris Stapleton tribute show dates, grab tickets, and add us to your calendar."
+  schemas={eventSchemas}
 >
   <Nav current="shows" />
 
@@ -186,7 +196,7 @@ const featured = featuredRaw ? mapShow(featuredRaw) : upcoming[0] ?? null;
         <span class="shows-header__star" aria-hidden="true">&#9733;</span>
         <span class="shows-header__label">Tour Dates</span>
       </div>
-      <h1 class="shows-header__title">Shows</h1>
+      <h1 class="shows-header__title">Upcoming Shows Across North Texas</h1>
       <p class="shows-header__lead">
         Catch Texas, Whiskey &amp; You live across North Texas. Grab your tickets, drop us on your calendar, and
         we&rsquo;ll see you on the floor.
@@ -203,7 +213,7 @@ const featured = featuredRaw ? mapShow(featuredRaw) : upcoming[0] ?? null;
         time={featured.time}
         venue={featured.venue}
         city={featured.city}
-        ticketHref={featured.ticketUrl || '#'}
+        ticketHref={featured.ticketUrl || '/contact'}
         mapsHref={featured.maps}
       />
     )
@@ -211,7 +221,7 @@ const featured = featuredRaw ? mapShow(featuredRaw) : upcoming[0] ?? null;
 
   <ShowList upcomingShows={upcomingRows} pastShows={pastRows}>
     <div class="shows-cta">
-      <h3 class="shows-cta__title">Want Us At Your Event?</h3>
+      <h2 class="shows-cta__title">Want Us At Your Event?</h2>
       <p class="shows-cta__text">
         Private parties, festivals, wineries and corporate gigs &mdash; let&rsquo;s get a date on the calendar.
       </p>
@@ -277,7 +287,7 @@ const featured = featuredRaw ? mapShow(featuredRaw) : upcoming[0] ?? null;
   .shows-header__title {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(44px, 7vw, 92px);
+    font-size: clamp(36px, 5.4vw, 68px);
     line-height: 0.94;
     text-transform: uppercase;
     margin: 0;

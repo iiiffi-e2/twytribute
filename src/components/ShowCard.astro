@@ -14,6 +14,8 @@ interface Props {
 }
 
 const { day, mon, year, venue, city, time, label, href, maps, cal, isUpcoming } = Astro.props;
+const ctaHref = !href || href === '#' ? (isUpcoming ? '/contact' : '/media') : href;
+const ctaLabel = (!href || href === '#') && isUpcoming ? 'Inquire' : label;
 ---
 
 <div class="show-card" data-event-row>
@@ -46,10 +48,10 @@ const { day, mon, year, venue, city, time, label, href, maps, cal, isUpcoming } 
       </svg>
     </a>
     <a
-      href={href}
+      href={ctaHref}
       class:list={['show-card__cta', { 'show-card__cta--past': !isUpcoming }]}
     >
-      {label}
+      {ctaLabel}
     </a>
   </div>
 </div>

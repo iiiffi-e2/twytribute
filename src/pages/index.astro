@@ -6,6 +6,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ShowCard from '../components/ShowCard.astro';
 import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus } from '../lib/shows';
+import { buildMusicEventSchema, buildVideoObjectSchema } from '../lib/seo';
 
 interface RawShow {
   _id: string;
@@ -131,8 +132,8 @@ function mapShow(s: RawShow) {
     status,
     maps: buildMapsUrl(s.venue, s.city),
     cal: buildCalendarUrl(s),
-    label: isUpcoming ? 'Tickets' : 'Recap',
-    href: isUpcoming ? (s.ticketUrl || '#') : (s.recapUrl || '/media'),
+    label: isUpcoming ? (s.ticketUrl ? 'Tickets' : 'Inquire') : 'Recap',
+    href: isUpcoming ? (s.ticketUrl || '/contact') : (s.recapUrl || '/media'),
     time: isUpcoming ? formatted.time : 'Past Show',
   };
 }
@@ -193,11 +194,28 @@ const pastShows = shows
 const videoPoster = featuredVideo.posterUrl || DEFAULT_VIDEO_POSTER;
 const videoTitle = featuredVideo.title || 'Texas, Whiskey & You live';
 const youtubeId = featuredVideo.youtubeId || DEFAULT_YOUTUBE_ID;
+
+const extraSchemas = [
+  ...upcomingShows.map((show) =>
+    buildMusicEventSchema({
+      venue: show.venue,
+      city: show.city,
+      date: show.date,
+      ticketUrl: show.ticketUrl,
+    }),
+  ),
+  buildVideoObjectSchema({
+    title: videoTitle,
+    youtubeId,
+    posterUrl: videoPoster,
+  }),
+];
 ---
 
 <BaseLayout
   title="Texas, Whiskey & You | Chris Stapleton Tribute — North Texas"
-  description="North Texas's premier Chris Stapleton tribute band. Authentic soul, grit, and live concert energy. View upcoming shows, watch videos, and book Texas, Whiskey & You for your event."
+  description="North Texas's premier Chris Stapleton tribute band. View upcoming shows, watch live videos, and book Texas, Whiskey & You for your event."
+  schemas={extraSchemas}
 >
   <Nav current="home" />
 
@@ -347,7 +365,7 @@ const youtubeId = featuredVideo.youtubeId || DEFAULT_YOUTUBE_ID;
         <button type="button" class="home-video__poster" data-video-poster aria-label="Play featured video">
           <img
             src={videoPoster}
-            alt=""
+            alt={`${videoTitle} — Texas, Whiskey & You live`}
             class="home-video__poster-img"
             loading="lazy"
           />

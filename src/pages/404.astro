@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Page Not Found | Texas, Whiskey & You"
+  description="That page is off the set list. Head back to upcoming shows, book the band, or return home."
+>
+  <Nav />
+
+  <section class="not-found">
+    <div class="not-found__inner">
+      <div class="section-label">Wrong Turn</div>
+      <h1 class="not-found__title">This Page Is Off The Set List</h1>
+      <p class="not-found__text">
+        The link you followed does not exist on this site. Catch an upcoming show, book the band, or head home.
+      </p>
+      <div class="not-found__actions">
+        <a href="/shows" class="btn-primary">Upcoming Shows</a>
+        <a href="/book" class="btn-secondary">Book The Band</a>
+        <a href="/" class="not-found__home">Home</a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding: 160px 5vw 80px;
+    background: var(--color-bg);
+  }
+
+  .not-found__inner {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .not-found__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 0.98;
+    text-transform: uppercase;
+    color: var(--color-text);
+    margin: 16px 0 0;
+  }
+
+  .not-found__text {
+    color: var(--color-text-muted);
+    font-size: 17px;
+    line-height: 1.65;
+    margin: 20px auto 0;
+    max-width: 520px;
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .not-found__home {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 15px 22px;
+  }
+</style>

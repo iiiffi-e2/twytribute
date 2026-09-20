@@ -5,6 +5,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import BookingForm from '../components/BookingForm.astro';
+import FaqList from '../components/FaqList.astro';
+import { BOOKING_FAQS, buildFaqPageSchema } from '../lib/seo';
 
 const EVENT_TYPES = [
   {
@@ -51,6 +53,7 @@ const PROCESS_STEPS = [
 <BaseLayout
   title="Book The Band | Texas, Whiskey & You — Chris Stapleton Tribute"
   description="Book Texas, Whiskey & You — North Texas's Chris Stapleton tribute band — for festivals, venues, corporate events, and private parties. Submit your inquiry today."
+  schemas={[buildFaqPageSchema(BOOKING_FAQS)]}
 >
   <div class="book-page">
     <Nav current="book" />
@@ -163,6 +166,16 @@ const PROCESS_STEPS = [
           <h2 class="section-title">Booking Inquiry</h2>
         </div>
         <BookingForm />
+      </div>
+    </section>
+
+    <section class="book-faq">
+      <div class="book-faq__inner">
+        <div class="book-faq__header">
+          <div class="section-label">Before You Book</div>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+        </div>
+        <FaqList items={BOOKING_FAQS} />
       </div>
     </section>
 
@@ -500,6 +513,19 @@ const PROCESS_STEPS = [
     font-size: 14px;
     padding: 13px 28px;
     white-space: nowrap;
+  }
+
+  .book-faq {
+    padding: 20px 5vw 90px;
+  }
+
+  .book-faq__inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .book-faq__header {
+    margin-bottom: 28px;
   }
 
   @media (max-width: 1024px) {

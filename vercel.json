@@ -5,6 +5,13 @@
     { "source": "/Media.dc.html", "destination": "/media", "permanent": true },
     { "source": "/Book.dc.html", "destination": "/book", "permanent": true },
     { "source": "/Band.dc.html", "destination": "/band", "permanent": true },
-    { "source": "/Contact.dc.html", "destination": "/contact", "permanent": true }
+    { "source": "/Contact.dc.html", "destination": "/contact", "permanent": true },
+    { "source": "/hello-world", "destination": "/", "permanent": true },
+    { "source": "/hello-world/", "destination": "/", "permanent": true },
+    { "source": "/shows/", "destination": "/shows", "permanent": true },
+    { "source": "/media/", "destination": "/media", "permanent": true },
+    { "source": "/book/", "destination": "/book", "permanent": true },
+    { "source": "/band/", "destination": "/band", "permanent": true },
+    { "source": "/contact/", "destination": "/contact", "permanent": true }
   ]
 }
