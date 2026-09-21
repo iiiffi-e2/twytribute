@@ -4,19 +4,40 @@ export interface ShowInput {
   date: string;
 }
 
-export function formatShowDate(isoDate: string) {
-  const d = new Date(isoDate);
-  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-  const hours = d.getHours();
-  const minutes = d.getMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const h12 = hours % 12 || 12;
-  const time = minutes === 0 ? `${h12}:00 ${ampm}` : `${h12}:${String(minutes).padStart(2, '0')} ${ampm}`;
+const SHOW_TIME_ZONE = 'America/Chicago';
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+function centralParts(isoDate: string) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: SHOW_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }).formatToParts(new Date(isoDate));
+
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? '';
+
   return {
-    day: String(d.getDate()),
-    mon: months[d.getMonth()],
-    year: String(d.getFullYear()),
-    time,
+    year: get('year'),
+    month: get('month'),
+    day: get('day'),
+    hour: get('hour'),
+    minute: get('minute'),
+    dayPeriod: get('dayPeriod').toUpperCase(),
+  };
+}
+
+export function formatShowDate(isoDate: string) {
+  const parts = centralParts(isoDate);
+  return {
+    day: String(Number(parts.day)),
+    mon: MONTHS[Number(parts.month) - 1],
+    year: parts.year,
+    time: `${parts.hour}:${parts.minute} ${parts.dayPeriod}`,
   };
 }
 
@@ -25,8 +46,8 @@ export function buildMapsUrl(venue: string, city: string) {
 }
 
 export function buildCalendarUrl(show: ShowInput) {
-  const d = new Date(show.date);
-  const ymd = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+  const parts = centralParts(show.date);
+  const ymd = `${parts.year}${parts.month}${parts.day}`;
   const text = encodeURIComponent(`Texas, Whiskey & You @ ${show.venue}`);
   const loc = encodeURIComponent(`${show.venue}, ${show.city}`);
   const details = encodeURIComponent('Live tribute to Chris Stapleton');

@@ -11,6 +11,11 @@ export default defineType({
       name: 'date',
       title: 'Date & Time',
       type: 'datetime',
+      description: 'Show start time in Central Time',
+      options: {
+        displayTimeZone: 'America/Chicago',
+        allowTimeZoneSwitch: false,
+      },
       validation: (r) => r.required(),
     }),
     defineField({ name: 'ticketUrl', title: 'Ticket URL', type: 'url' }),
@@ -36,7 +41,7 @@ export default defineType({
     prepare({ title, subtitle, date }) {
       return {
         title,
-        subtitle: `${subtitle} — ${date ? new Date(date).toLocaleDateString() : ''}`,
+        subtitle: `${subtitle} — ${date ? new Date(date).toLocaleDateString('en-US', { timeZone: 'America/Chicago' }) : ''}`,
       };
     },
   },

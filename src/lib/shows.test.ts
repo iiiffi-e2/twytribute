@@ -3,7 +3,17 @@ import { formatShowDate, buildMapsUrl, buildCalendarUrl, deriveStatus, resolveSh
 
 describe('formatShowDate', () => {
   it('formats date parts for display', () => {
-    const result = formatShowDate('2026-08-15T20:00:00');
+    const result = formatShowDate('2026-08-15T20:00:00-05:00');
+    expect(result).toEqual({ day: '15', mon: 'AUG', year: '2026', time: '8:00 PM' });
+  });
+
+  it('displays 8 PM Central when Sanity stores that instant as 2 AM UTC (CST)', () => {
+    const result = formatShowDate('2026-01-16T02:00:00.000Z');
+    expect(result).toEqual({ day: '15', mon: 'JAN', year: '2026', time: '8:00 PM' });
+  });
+
+  it('displays 8 PM Central during daylight saving (CDT stores as 1 AM UTC)', () => {
+    const result = formatShowDate('2026-08-16T01:00:00.000Z');
     expect(result).toEqual({ day: '15', mon: 'AUG', year: '2026', time: '8:00 PM' });
   });
 });
@@ -20,10 +30,20 @@ describe('buildCalendarUrl', () => {
     const url = buildCalendarUrl({
       venue: 'Lava Cantina',
       city: 'The Colony, TX',
-      date: '2026-08-15T20:00:00',
+      date: '2026-08-15T20:00:00-05:00',
     });
     expect(url).toContain('calendar.google.com');
     expect(url).toContain('Texas%2C%20Whiskey');
+    expect(url).toContain('dates=20260815/20260815');
+  });
+
+  it('uses the Central calendar date when Sanity stores 8 PM CST as 2 AM UTC', () => {
+    const url = buildCalendarUrl({
+      venue: 'Lava Cantina',
+      city: 'The Colony, TX',
+      date: '2026-01-16T02:00:00.000Z',
+    });
+    expect(url).toContain('dates=20260115/20260115');
   });
 });
 
